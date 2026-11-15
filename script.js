@@ -50,6 +50,7 @@
   var finePointer = window.matchMedia ? window.matchMedia("(hover: hover) and (pointer: fine)") : null;
   var observer = null;
   var initialized = false;
+  var parallaxBound = false;
 
   function addReveal(selector, delay, stagger, extra, targets) {
     document.querySelectorAll(selector).forEach(function (element, index) {
@@ -69,6 +70,7 @@
   }
 
   function attachTilt(card) {
+    if (card.classList.contains("motion-tilt")) return;
     card.classList.add("motion-tilt");
     card.addEventListener("pointermove", function (event) {
       if (event.pointerType !== "mouse") return;
@@ -103,8 +105,11 @@
     function schedule() {
       if (!frame) frame = window.requestAnimationFrame(update);
     }
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
+    if (!parallaxBound) {
+      window.addEventListener("scroll", schedule, { passive: true });
+      window.addEventListener("resize", schedule, { passive: true });
+      parallaxBound = true;
+    }
     schedule();
   }
 

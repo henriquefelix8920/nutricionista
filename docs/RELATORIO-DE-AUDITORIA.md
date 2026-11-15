@@ -55,9 +55,9 @@ Data: 15 de novembro de 2026.
 |---|---|---|
 | Branch e deployment anterior | Aprovado | main em a51d16fa9707f8208297a3504d650025e44b9dfa; deployment anterior READY com o mesmo SHA. |
 | Leitura dos cinco arquivos solicitados | Aprovado | index.html, styles.css, script.js, Design System e relatório foram recuperados antes de editar. |
-| Sintaxe JavaScript | Pendente | Será feita a checagem estática depois da gravação; não equivale a DOM real. |
+| Sintaxe JavaScript | Aprovado — estático | JavaScript compilado com o parser V8 (Function constructor); isso verifica parse, não execução real do DOM. |
 | Menu móvel | Não executado em browser | Código original preservado; requer teste real. |
-| FAQ | Revisão estática | details/summary mantidos; ::details-content é progressivo. |
+| FAQ | Revisão estática | details/summary mantidos; ::details-content é progressivo. Interação real por teclado/mouse não executada. |
 | Links e WhatsApp | Revisão estática | HTML e URLs não foram modificados; falta clique real. |
 | prefers-reduced-motion | Revisão estática | Guard JS e overrides CSS presentes; emulação ainda não executada. |
 | Viewports 1440×900, 1280×800, 768×1024, 390×844 e 360×800 | Não executado | Browser/Playwright visual indisponível neste ambiente. |
@@ -77,3 +77,17 @@ Data: 15 de novembro de 2026.
 - Testar FAQ por mouse/teclado.
 - Testar menu, anchors e CTAs de WhatsApp.
 - Confirmar no Vercel o deployment que usa o novo commit.
+
+
+### Checagens estáticas adicionais do commit 9c10b9a
+
+- JavaScript: parse válido no runtime V8 usado para a checagem.
+- CSS: chaves balanceadas.
+- HTML original: SHA permaneceu idêntico; nenhum texto, heading, CTA ou estrutura foi alterado.
+- Um H1 principal; nenhuma âncora interna quebrada.
+- 43 grupos de seletores de entrada/revelação registrados no script.
+- Regras JS e CSS para prefers-reduced-motion presentes.
+- IntersectionObserver e requestAnimationFrame presentes.
+- Nenhuma referência a GSAP adicionada ao código.
+- A URL do deployment retornou HTTP 200 para a página, styles.css e script.js; isso confirma a entrega dos assets, não a execução visual das animações em navegador.
+- Proteção contra listeners duplicados ao alternar a preferência de movimento adicionada antes do commit final.

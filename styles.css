@@ -669,3 +669,13 @@ html.motion-ready .floating-whatsapp:active { transform: translateY(0) scale(.99
   html.motion-ready .motion-tilt, html.motion-ready .motion-tilt:hover,
   html.motion-ready .motion-tilt.motion-tilting { transform: none !important; }
 }
+
+/* Card entrances settle from a very small depth scale. */
+
+html.motion-ready .motion-reveal.motion-card {
+  scale: .985;
+  transition: opacity 760ms var(--motion-ease) var(--motion-delay, 0ms),
+              translate 900ms var(--motion-ease) var(--motion-delay, 0ms),
+              scale 900ms var(--motion-ease) var(--motion-delay, 0ms);
+}
+html.motion-ready .motion-reveal.motion-card.motion-visible { scale: 1; }
