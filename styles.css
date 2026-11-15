@@ -506,3 +506,166 @@ a.contact-card:hover { transform: translateY(-4px); border-color: var(--pink); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* --------------------------------------------------------------------------
+   BOTANICAL EDITORIAL MOTION — progressive enhancement
+   These styles activate only after the motion script is ready.
+   -------------------------------------------------------------------------- */
+html.motion-ready { --motion-ease: cubic-bezier(.22, .72, .24, 1); }
+
+html.motion-ready .motion-enter {
+  opacity: 0;
+  translate: 0 18px;
+  transition: opacity 780ms var(--motion-ease) var(--motion-delay, 0ms),
+              translate 900ms var(--motion-ease) var(--motion-delay, 0ms);
+  will-change: opacity, translate;
+}
+html.motion-ready .motion-enter.motion-visible { opacity: 1; translate: 0 0; will-change: auto; }
+html.motion-ready .motion-mask {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1050ms cubic-bezier(.2, .78, .22, 1) var(--motion-delay, 0ms),
+              opacity 760ms var(--motion-ease) var(--motion-delay, 0ms),
+              translate 900ms var(--motion-ease) var(--motion-delay, 0ms);
+}
+html.motion-ready .motion-mask.motion-visible { clip-path: inset(0); }
+html.motion-ready .motion-art {
+  scale: .94; translate: 0 13px;
+  transition: opacity 1050ms var(--motion-ease) var(--motion-delay, 0ms),
+              scale 1250ms cubic-bezier(.18, .76, .22, 1) var(--motion-delay, 0ms),
+              translate 1150ms var(--motion-ease) var(--motion-delay, 0ms);
+}
+html.motion-ready .motion-art.motion-visible { scale: 1; translate: 0 0; }
+html.motion-ready .motion-reveal {
+  opacity: 0; translate: 0 23px;
+  transition: opacity 760ms var(--motion-ease) var(--motion-delay, 0ms),
+              translate 900ms var(--motion-ease) var(--motion-delay, 0ms);
+  will-change: opacity, translate;
+}
+html.motion-ready .motion-reveal.motion-visible { opacity: 1; translate: 0 0; will-change: auto; }
+html.motion-ready .motion-reveal.motion-scale {
+  scale: .94;
+  transition: opacity 850ms var(--motion-ease) var(--motion-delay, 0ms),
+              translate 900ms var(--motion-ease) var(--motion-delay, 0ms),
+              scale 1050ms cubic-bezier(.18, .76, .22, 1) var(--motion-delay, 0ms);
+}
+html.motion-ready .motion-reveal.motion-scale.motion-visible { scale: 1; }
+html.motion-ready .motion-reveal.motion-icon {
+  scale: .82; rotate: -7deg;
+  transition: opacity 700ms var(--motion-ease) var(--motion-delay, 0ms),
+              translate 800ms var(--motion-ease) var(--motion-delay, 0ms),
+              scale 850ms var(--motion-ease) var(--motion-delay, 0ms),
+              rotate 850ms var(--motion-ease) var(--motion-delay, 0ms);
+}
+html.motion-ready .motion-reveal.motion-icon.motion-visible { scale: 1; rotate: 0deg; }
+
+/* Hero: slow organic motion using individual transforms to preserve current art transforms. */
+html.motion-ready .hero-art.motion-visible .art-orbit-one {
+  rotate: 0deg; animation: mc-orbit 58s linear infinite; transform-origin: center;
+}
+html.motion-ready .hero-art.motion-visible .art-orbit-two {
+  rotate: 0deg; animation: mc-orbit-reverse 76s linear infinite; transform-origin: center;
+}
+html.motion-ready .hero-art.motion-visible .plate { translate: 0 0; animation: mc-plate 7.6s ease-in-out infinite; }
+html.motion-ready .hero-art.motion-visible .art-note-top { translate: 0 0; animation: mc-note 6.4s ease-in-out infinite; }
+html.motion-ready .hero-art.motion-visible .art-note-bottom { translate: 0 0; animation: mc-note-reverse 7.2s ease-in-out infinite; }
+html.motion-ready .hero-art.motion-visible .art-stem {
+  rotate: 0deg; animation: mc-stem 8.4s ease-in-out infinite; transform-origin: 74% 88%;
+}
+html.motion-ready .hero-art.motion-visible .food-shape-one { translate: 0 0; animation: mc-food 8.2s ease-in-out infinite; }
+html.motion-ready .hero-art.motion-visible .food-shape-two { translate: 0 0; animation: mc-food-reverse 9.6s ease-in-out infinite; }
+html.motion-ready .hero-art.motion-visible .food-shape-three { translate: 0 0; animation: mc-food 7.3s ease-in-out infinite reverse; }
+html.motion-ready .hero-art.motion-visible .food-leaf { rotate: 0deg; animation: mc-leaf 6.8s ease-in-out infinite; }
+html.motion-ready .hero-art-wrap.motion-parallax {
+  translate: 0 var(--hero-parallax-y, 0px);
+  transition: translate 180ms linear;
+}
+
+/* Program, about and closing decorations. */
+html.motion-ready .program-art.motion-visible .program-ring-outer { rotate: 0deg; animation: mc-orbit 72s linear infinite; }
+html.motion-ready .program-art.motion-visible .program-ring-inner { rotate: 0deg; animation: mc-orbit-reverse 54s linear infinite; }
+html.motion-ready .program-art.motion-visible .program-star { translate: 0 0; animation: mc-star 5.8s ease-in-out infinite; }
+html.motion-ready .program-art.motion-visible .program-star-two { animation-delay: -2.1s; }
+html.motion-ready .program-art.motion-visible svg {
+  scale: 1; rotate: 0deg; animation: mc-branch 7.8s ease-in-out infinite; transform-origin: center;
+}
+html.motion-ready .about-card.motion-visible .about-card-branch { translate: 0 0; animation: mc-branch-float 7.2s ease-in-out infinite; }
+html.motion-ready .about-card.motion-visible .about-monogram.motion-visible { scale: 1; }
+html.motion-ready .principle-card.motion-visible .symbol-sun { rotate: 0deg; animation: mc-symbol 24s ease-in-out infinite; }
+html.motion-ready .principle-card.motion-visible .symbol-leaf { rotate: 0deg; animation: mc-leaf 7.5s ease-in-out infinite; }
+html.motion-ready .care-card.motion-visible .care-graphic-pin .pin-dot { scale: 1; animation: mc-pin 4.8s ease-in-out infinite; }
+html.motion-ready .closing-deco.motion-visible { rotate: 0deg; animation: mc-star 6s ease-in-out infinite; }
+
+/* Pointer-only 3D tilt and microinteractions. */
+html.motion-ready .motion-tilt { transform-style: preserve-3d; transition: transform 420ms var(--motion-ease), box-shadow 420ms var(--motion-ease); }
+html.motion-ready .motion-tilt.motion-tilting {
+  transform: perspective(1050px) rotateX(var(--motion-rotate-x, 0deg))
+             rotateY(var(--motion-rotate-y, 0deg)) translateY(-5px);
+}
+html.motion-ready .motion-tilt:hover:not(.motion-tilting) { transform: translateY(-4px); }
+html.motion-ready .button:active, html.motion-ready .nav-cta:active { transform: translateY(-1px) scale(.985); }
+html.motion-ready .button > span, html.motion-ready .nav-cta > span,
+html.motion-ready .text-link > span, html.motion-ready .contact-action > span {
+  display: inline-block; transition: translate 260ms var(--motion-ease);
+}
+html.motion-ready .button:hover > span, html.motion-ready .nav-cta:hover > span,
+html.motion-ready .text-link:hover > span, html.motion-ready .contact-card:hover .contact-action > span {
+  translate: 3px -1px;
+}
+html.motion-ready .faq-item summary::after { transition: transform 320ms var(--motion-ease), background 320ms var(--motion-ease); }
+html.motion-ready .faq-item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+html.motion-ready .floating-whatsapp {
+  transition: transform 320ms var(--motion-ease), box-shadow 320ms var(--motion-ease), background 320ms var(--motion-ease);
+}
+html.motion-ready .floating-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(38, 0, 46, .24); }
+html.motion-ready .floating-whatsapp:active { transform: translateY(0) scale(.99); }
+
+/* Native details/summary remains the control; modern browsers animate the content height. */
+@supports selector(details::details-content) {
+  html.motion-ready .faq-item::details-content {
+    block-size: 0; overflow: clip;
+    transition: block-size 380ms var(--motion-ease), content-visibility 380ms allow-discrete;
+  }
+  html.motion-ready .faq-item[open]::details-content { block-size: auto; }
+  html.motion-ready .faq-answer {
+    opacity: 0; translate: 0 -6px;
+    transition: opacity 260ms ease, translate 320ms var(--motion-ease);
+  }
+  html.motion-ready .faq-item[open] .faq-answer { opacity: 1; translate: 0 0; }
+}
+
+@keyframes mc-orbit { to { rotate: 360deg; } }
+@keyframes mc-orbit-reverse { to { rotate: -360deg; } }
+@keyframes mc-plate { 0%,100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+@keyframes mc-note { 0%,100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+@keyframes mc-note-reverse { 0%,100% { translate: 0 0; } 50% { translate: 0 6px; } }
+@keyframes mc-stem { 0%,100% { rotate: 0deg; } 50% { rotate: 2deg; } }
+@keyframes mc-food { 0%,100% { translate: 0 0; } 50% { translate: 2px -3px; } }
+@keyframes mc-food-reverse { 0%,100% { translate: 0 0; } 50% { translate: -2px 3px; } }
+@keyframes mc-leaf { 0%,100% { rotate: 0deg; } 50% { rotate: 3deg; } }
+@keyframes mc-star { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes mc-branch { 0%,100% { scale: 1; rotate: 0deg; } 50% { scale: 1.025; rotate: 1deg; } }
+@keyframes mc-branch-float { 0%,100% { translate: 0 0; } 50% { translate: -3px -7px; } }
+@keyframes mc-symbol { 0%,100% { rotate: 0deg; } 50% { rotate: 10deg; } }
+@keyframes mc-pin { 0%,100% { scale: 1; } 50% { scale: 1.08; } }
+
+@media (hover: none), (pointer: coarse), (max-width: 820px) {
+  html.motion-ready .hero-art-wrap.motion-parallax { translate: none; }
+  html.motion-ready .motion-tilt,
+  html.motion-ready .motion-tilt:hover,
+  html.motion-ready .motion-tilt.motion-tilting { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ready, html.motion-ready *, html.motion-ready *::before, html.motion-ready *::after {
+    scroll-behavior: auto !important; animation: none !important; transition: none !important;
+  }
+  html.motion-ready .motion-enter, html.motion-ready .motion-reveal,
+  html.motion-ready .motion-mask, html.motion-ready .motion-art,
+  html.motion-ready .motion-scale, html.motion-ready .motion-icon {
+    opacity: 1 !important; clip-path: none !important; translate: none !important;
+    scale: none !important; rotate: none !important; transform: none !important;
+  }
+  html.motion-ready .hero-art-wrap.motion-parallax { translate: none !important; }
+  html.motion-ready .motion-tilt, html.motion-ready .motion-tilt:hover,
+  html.motion-ready .motion-tilt.motion-tilting { transform: none !important; }
+}
