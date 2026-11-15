@@ -671,7 +671,7 @@ html.motion-ready .floating-whatsapp:active { transform: translateY(0) scale(.99
   html.motion-ready .motion-mask, html.motion-ready .motion-art,
   html.motion-ready .motion-scale, html.motion-ready .motion-icon {
     opacity: 1 !important; clip-path: none !important; translate: none !important;
-    scale: none !important; rotate: none !important; transform: none !important;
+    scale: none !important; rotate: none !important; filter: none !important; transform: none !important;
   }
   html.motion-ready .hero-art-wrap.motion-parallax { translate: none !important; }
   html.motion-ready .motion-tilt, html.motion-ready .motion-tilt:hover,
@@ -687,3 +687,42 @@ html.motion-ready .motion-reveal.motion-card {
               scale 900ms var(--motion-ease) var(--motion-delay, 0ms);
 }
 html.motion-ready .motion-reveal.motion-card.motion-visible { scale: 1; }
+
+
+/* Per-section titles: a unique randomized transition is assigned by script.js.
+   These reveal styles do not clip the element, so IntersectionObserver can detect it. */
+html.motion-ready .motion-reveal.motion-title {
+  transition: opacity var(--motion-title-duration, 900ms) cubic-bezier(.22, .72, .24, 1) var(--motion-title-delay, 0ms),
+              translate var(--motion-title-duration, 900ms) cubic-bezier(.22, .72, .24, 1) var(--motion-title-delay, 0ms),
+              scale var(--motion-title-duration, 900ms) cubic-bezier(.22, .72, .24, 1) var(--motion-title-delay, 0ms),
+              rotate var(--motion-title-duration, 900ms) cubic-bezier(.22, .72, .24, 1) var(--motion-title-delay, 0ms),
+              filter var(--motion-title-duration, 900ms) cubic-bezier(.22, .72, .24, 1) var(--motion-title-delay, 0ms);
+}
+html.motion-ready .motion-reveal.motion-title-rise {
+  translate: 0 34px; scale: 1; rotate: 0deg; filter: blur(7px);
+}
+html.motion-ready .motion-reveal.motion-title-slide-left {
+  translate: -34px 10px; scale: 1; rotate: -0.8deg; filter: blur(2px);
+}
+html.motion-ready .motion-reveal.motion-title-slide-right {
+  translate: 34px 10px; scale: 1; rotate: 0.8deg; filter: blur(2px);
+}
+html.motion-ready .motion-reveal.motion-title-zoom {
+  translate: 0 14px; scale: .84; rotate: 0deg; filter: blur(6px);
+}
+html.motion-ready .motion-reveal.motion-title-drop {
+  translate: 0 -28px; scale: .97; rotate: 0deg; filter: blur(4px);
+}
+html.motion-ready .motion-reveal.motion-title-tilt {
+  translate: 0 20px; scale: 1; rotate: 2.4deg; filter: blur(3px);
+}
+html.motion-ready .motion-reveal.motion-title-soft {
+  translate: 0 9px; scale: 1.06; rotate: 0deg; filter: blur(12px);
+}
+html.motion-ready .motion-reveal.motion-title-diagonal {
+  translate: -24px 20px; scale: .96; rotate: -1.3deg; filter: blur(5px);
+}
+html.motion-ready .motion-reveal.motion-title.motion-visible {
+  opacity: 1; translate: 0 0; scale: 1; rotate: 0deg; filter: blur(0);
+  will-change: auto;
+}

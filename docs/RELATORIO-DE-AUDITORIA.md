@@ -129,3 +129,18 @@ Após o novo deployment, a confirmação possível nesta sessão é a entrega HT
 - Os assets publicados contêm os ajustes de deslocamento, escala dos cards e remoção de revelações duplicadas.
 - Revisão estática pós-correção: JavaScript parse válido, chaves CSS balanceadas, HTML sem alterações e nenhuma âncora quebrada.
 - A validação visual em navegador segue NÃO EXECUTADA nesta sessão, devido ao bloqueio de navegação externa do Chromium. Não há screenshots nem confirmação visual nos cinco viewports.
+
+
+## Correção dos títulos de seção e variação aleatória — 15 de novembro de 2026
+
+- Os quatro títulos reportados pelo usuário estavam presentes no HTML; a falha estava na apresentação. A classe de máscara aplicava `clip-path: inset(0 0 100% 0)` antes do gatilho do IntersectionObserver, o que podia manter o título totalmente recortado.
+- As máscaras foram removidas dos quatro títulos mencionados. A visibilidade inicial continua baseada no reveal progressivo, mas o elemento permanece detectável pelo observador.
+- Os oito títulos H2 das seções recebem oito variações de animação sorteadas e embaralhadas a cada carregamento, sem repetição entre títulos na mesma visita. A duração e o atraso também variam levemente.
+- As variações usam deslocamento, escala, rotação e desfoque; não recortam a caixa do título nem alteram o fluxo do layout.
+- Fallback de movimento reduzido foi atualizado para remover também o desfoque.
+
+### Verificações estáticas desta correção
+- Todos os oito seletores de título existem na marcação HTML.
+- Os quatro títulos reportados não recebem mais a classe `motion-mask`.
+- JavaScript validado por parse; seletores e classes das oito variações conferidos no CSS.
+- A confirmação visual em browser continua dependente de uma sessão com acesso externo habilitado; a checagem HTTP do deployment será realizada após publicação.

@@ -113,6 +113,49 @@
     schedule();
   }
 
+  function applyRandomTitleTransitions() {
+    var selectors = [
+      ".approach-heading h2",
+      ".services-heading h2",
+      ".program-copy > h2",
+      ".about-copy > h2",
+      ".care-heading > h2",
+      ".faq-intro > h2",
+      ".closing-inner h2",
+      ".contact-heading > h2"
+    ];
+    var headings = [];
+    selectors.forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (heading) {
+        headings.push(heading);
+      });
+    });
+
+    /* Shuffle eight distinct motion styles so no section title repeats a style. */
+    var variations = [
+      "motion-title-rise",
+      "motion-title-slide-left",
+      "motion-title-slide-right",
+      "motion-title-zoom",
+      "motion-title-drop",
+      "motion-title-tilt",
+      "motion-title-soft",
+      "motion-title-diagonal"
+    ];
+    for (var i = variations.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temporary = variations[i];
+      variations[i] = variations[j];
+      variations[j] = temporary;
+    }
+
+    headings.forEach(function (heading, index) {
+      heading.classList.add("motion-title", variations[index % variations.length]);
+      heading.style.setProperty("--motion-title-duration", (820 + Math.floor(Math.random() * 360)) + "ms");
+      heading.style.setProperty("--motion-title-delay", (35 + Math.floor(Math.random() * 115)) + "ms");
+    });
+  }
+
   function initialize() {
     if (preference && preference.matches) return;
     if (!("IntersectionObserver" in window)) return;
@@ -135,12 +178,12 @@
       /* Scroll reveals, once per element. */
       addReveal(".intro-band-inner > *", 0, 55, null, targets);
       addReveal(".approach-heading .eyebrow", 0, 0, null, targets);
-      addReveal(".approach-heading h2", 70, 0, "motion-mask", targets);
+      addReveal(".approach-heading h2", 70, 0, null, targets);
       addReveal(".heading-note", 180, 0, null, targets);
       addReveal(".principle-card", 70, 105, "motion-card", targets);
 
       addReveal(".services-heading .eyebrow", 0, 0, null, targets);
-      addReveal(".services-heading h2", 65, 0, "motion-mask", targets);
+      addReveal(".services-heading h2", 65, 0, null, targets);
       addReveal(".services-heading > p", 165, 0, null, targets);
       addReveal(".service-card", 70, 105, "motion-card", targets);
       addReveal(".service-icon", 130, 0, "motion-icon", targets);
@@ -160,16 +203,18 @@
       addReveal(".faq-item", 0, 65, null, targets);
 
       addReveal(".closing-inner > div:first-child > .eyebrow, .closing-inner > div:first-child > p:last-child", 0, 90, null, targets);
-      addReveal(".closing-inner h2", 90, 0, "motion-mask", targets);
+      addReveal(".closing-inner h2", 90, 0, null, targets);
       addReveal(".closing-action > *", 100, 100, null, targets);
       addReveal(".closing-deco", 0, 0, "motion-scale", targets);
       addReveal(".contact-heading > .eyebrow", 0, 0, null, targets);
-      addReveal(".contact-heading h2", 85, 0, "motion-mask", targets);
+      addReveal(".contact-heading h2", 85, 0, null, targets);
       addReveal(".contact-card", 70, 105, "motion-card", targets);
       addReveal(".social-row > *", 60, 70, null, targets);
       addReveal(".footer-main > *", 0, 80, null, targets);
       addReveal(".footer-legal > *", 80, 65, null, targets);
       addReveal(".floating-whatsapp", 0, 0, "motion-floating-cta", targets);
+
+      applyRandomTitleTransitions();
 
       if (finePointer && finePointer.matches && window.innerWidth > 820) {
         document.querySelectorAll(".principle-card, .service-card, .care-card").forEach(attachTilt);

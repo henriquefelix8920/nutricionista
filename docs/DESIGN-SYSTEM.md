@@ -108,3 +108,7 @@ Referência oficial: https://gsap.com/docs/v3/Plugins/ScrollTrigger/ (consulta e
 ## Refinamento de movimento para evitar colisões
 
 Na revisão posterior ao relato de sobreposição, foram reduzidos os deslocamentos de entrada para 10–12 px e os cards passaram a usar 8 px de deslocamento e scale 0,99, compatíveis com o gap de 14 px da grade. Foram removidas revelações redundantes em elementos aninhados (programa, monograma, título do CTA e título de contato). O grafismo do CTA final foi afastado da área do título, especialmente em telas estreitas.
+
+
+### Transições dos títulos de seção
+Os oito títulos H2 das seções recebem, a cada carregamento, estilos de entrada sorteados sem repetição na mesma página. As variações incluem subida com desfoque, deslocamento lateral, zoom, queda suave, inclinação, foco progressivo e movimento diagonal. Duração e atraso também variam levemente. Os títulos não usam clip-path como estado inicial, para que continuem detectáveis pelo IntersectionObserver e nunca permaneçam escondidos enquanto aguardam a rolagem. A preferência por movimento reduzido continua desativando as transições.
