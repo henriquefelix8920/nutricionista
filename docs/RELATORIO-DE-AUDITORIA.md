@@ -119,3 +119,13 @@ O usuário relatou colisões visuais após a camada de motion. Foi feita uma rev
 Foi tentado abrir o domínio publicado em Chromium/Playwright para inspecionar os viewports 1440×900, 1280×800, 768×1024, 390×844 e 360×800. O ambiente bloqueou a navegação externa (net::ERR_BLOCKED_BY_ADMINISTRATOR), e não foi possível obter screenshots ou executar a página em browser real. Portanto, as alterações acima são correções baseadas na análise dos seletores e dimensões CSS existentes; não declaro que a revisão visual pixel a pixel foi concluída.
 
 Após o novo deployment, a confirmação possível nesta sessão é a entrega HTTP dos assets e o estado do deployment no Vercel. A conferência final visual dos cinco viewports segue pendente em navegador com acesso ao domínio.
+
+
+### Resultado da correção publicada
+
+- Commit de código: 666ff1d80f0b051666179b6e51a4b2f6ab40dda7.
+- Deployment de produção desse commit: READY; alias de produção inclui nutricionista-fawn.vercel.app.
+- Página principal, styles.css e script.js consultados no alias de produção retornaram HTTP 200.
+- Os assets publicados contêm os ajustes de deslocamento, escala dos cards e remoção de revelações duplicadas.
+- Revisão estática pós-correção: JavaScript parse válido, chaves CSS balanceadas, HTML sem alterações e nenhuma âncora quebrada.
+- A validação visual em navegador segue NÃO EXECUTADA nesta sessão, devido ao bloqueio de navegação externa do Chromium. Não há screenshots nem confirmação visual nos cinco viewports.
