@@ -17,7 +17,7 @@ Data: 15 de novembro de 2026.
 
 ## Verificações estáticas realizadas
 
-A leitura dos arquivos no GitHub confirmou um único H1 na página, ausência de padrões de placeholder e nove links diretos de WhatsApp. Os destinos e âncoras foram conferidos por inspeção do HTML, mas não clicados em navegador.
+A leitura dos arquivos no GitHub confirmou um único H1, IDs únicos, nenhuma âncora interna quebrada, ausência de padrões de placeholder e nove links diretos de WhatsApp. Os 12 links com target=_blank incluem rel=noopener. O código JavaScript passou pela compilação sintática do runtime usado na checagem e as chaves do CSS estão balanceadas. Os destinos foram inspecionados no HTML, mas não clicados em navegador; a checagem sintática não equivale a testes funcionais.
 
 - Não há formulário que prometa enviar dados sem integração.
 - Não há seção de depoimentos ou avaliações inventadas.
