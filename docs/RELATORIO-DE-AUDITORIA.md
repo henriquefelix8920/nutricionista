@@ -101,3 +101,21 @@ Data: 15 de novembro de 2026.
 - Foram feitas requisições ao domínio de produção para a página, styles.css e script.js; os três recursos retornaram HTTP 200. Os recursos CSS/JS continham a camada de motion atual.
 - A verificação HTTP comprova que os assets foram entregues pelo deployment; não comprova a renderização/animação visual ou a interação em browser real.
 - Este registro de auditoria é uma atualização documental posterior ao commit de código. A publicação automática do commit documental será conferida separadamente.
+
+
+## Revisão de sobreposições — 15 de novembro de 2026
+
+O usuário relatou colisões visuais após a camada de motion. Foi feita uma revisão estática da implementação e aplicadas as seguintes correções preventivas:
+
+- Deslocamento vertical de entrada geral reduzido de 23 px para 12 px; do topo/header de 18 px para 10 px.
+- Cards recebem deslocamento máximo de 8 px e escala de 0,99, abaixo do gap de 14 px do grid, reduzindo a chance de invadirem visualmente o card vizinho durante a transição.
+- O container .program-includes deixou de ser revelado junto com suas linhas filhas; o texto introdutório do programa e cada item passam a ter animações não aninhadas.
+- O monograma deixou de receber uma segunda animação de escala dentro do .about-card, cujo próprio container já tem entrada.
+- Título do CTA final e título de contato deixaram de receber classes de revelação duplicadas.
+- Estrela decorativa do CTA final foi afastada do título e reduzida em telas móveis, com pointer-events desativado.
+
+### Limitação da revisão visual nesta sessão
+
+Foi tentado abrir o domínio publicado em Chromium/Playwright para inspecionar os viewports 1440×900, 1280×800, 768×1024, 390×844 e 360×800. O ambiente bloqueou a navegação externa (net::ERR_BLOCKED_BY_ADMINISTRATOR), e não foi possível obter screenshots ou executar a página em browser real. Portanto, as alterações acima são correções baseadas na análise dos seletores e dimensões CSS existentes; não declaro que a revisão visual pixel a pixel foi concluída.
+
+Após o novo deployment, a confirmação possível nesta sessão é a entrega HTTP dos assets e o estado do deployment no Vercel. A conferência final visual dos cinco viewports segue pendente em navegador com acesso ao domínio.

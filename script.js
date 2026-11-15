@@ -147,11 +147,10 @@
       addReveal(".services-foot > *", 70, 100, null, targets);
 
       addReveal(".program-art", 0, 0, "motion-scale", targets);
-      addReveal(".program-copy > *", 40, 75, null, targets);
+      addReveal(".program-copy > .eyebrow, .program-copy > .program-overline, .program-copy > h2, .program-copy > .program-lead, .program-copy > .button", 40, 75, null, targets);
       addReveal(".program-includes > div", 140, 95, null, targets);
 
       addReveal(".about-card", 0, 0, "motion-scale", targets);
-      addReveal(".about-monogram", 120, 0, "motion-scale", targets);
       addReveal(".about-copy > *", 40, 85, null, targets);
       addReveal(".care-heading > *", 0, 80, null, targets);
       addReveal(".care-card", 60, 120, "motion-card", targets);
@@ -160,11 +159,11 @@
       addReveal(".faq-intro > *", 0, 85, null, targets);
       addReveal(".faq-item", 0, 65, null, targets);
 
-      addReveal(".closing-inner > div:first-child > *", 0, 90, null, targets);
+      addReveal(".closing-inner > div:first-child > .eyebrow, .closing-inner > div:first-child > p:last-child", 0, 90, null, targets);
       addReveal(".closing-inner h2", 90, 0, "motion-mask", targets);
       addReveal(".closing-action > *", 100, 100, null, targets);
       addReveal(".closing-deco", 0, 0, "motion-scale", targets);
-      addReveal(".contact-heading > *", 0, 85, null, targets);
+      addReveal(".contact-heading > .eyebrow", 0, 0, null, targets);
       addReveal(".contact-heading h2", 85, 0, "motion-mask", targets);
       addReveal(".contact-card", 70, 105, "motion-card", targets);
       addReveal(".social-row > *", 60, 70, null, targets);
