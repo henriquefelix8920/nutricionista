@@ -91,3 +91,13 @@ Data: 15 de novembro de 2026.
 - Nenhuma referência a GSAP adicionada ao código.
 - A URL do deployment retornou HTTP 200 para a página, styles.css e script.js; isso confirma a entrega dos assets, não a execução visual das animações em navegador.
 - Proteção contra listeners duplicados ao alternar a preferência de movimento adicionada antes do commit final.
+
+
+### Confirmação final do deployment de código (15/11/2026)
+
+- Branch main confirmada em commit feb7269df8803c5db2e53a3533708cf60ef5dd42.
+- Deployment Vercel de produção: READY, deployment ID dpl_7orGzrjKDjXW1RuhiQqsKLCR1Bsw.
+- O deployment aponta para o commit acima, na branch main, e lista nutricionista-fawn.vercel.app como alias.
+- Foram feitas requisições ao domínio de produção para a página, styles.css e script.js; os três recursos retornaram HTTP 200. Os recursos CSS/JS continham a camada de motion atual.
+- A verificação HTTP comprova que os assets foram entregues pelo deployment; não comprova a renderização/animação visual ou a interação em browser real.
+- Este registro de auditoria é uma atualização documental posterior ao commit de código. A publicação automática do commit documental será conferida separadamente.
