@@ -17,6 +17,8 @@ Data: 15 de novembro de 2026.
 
 ## Verificações estáticas realizadas
 
+A leitura dos arquivos no GitHub confirmou um único H1 na página, ausência de padrões de placeholder e nove links diretos de WhatsApp. Os destinos e âncoras foram conferidos por inspeção do HTML, mas não clicados em navegador.
+
 - Não há formulário que prometa enviar dados sem integração.
 - Não há seção de depoimentos ou avaliações inventadas.
 - Não há preços, garantias de resultado ou linguagem de urgência.

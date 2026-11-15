@@ -25,7 +25,7 @@ Verificações calculadas a partir dos HEX originais:
 - #FE0472 sobre #FFFFFF: aproximadamente **3,84:1** — reservar para elementos gráficos ou texto grande; não usar para corpo pequeno.
 - #8AFF00 sobre branco: contraste insuficiente — não usar como texto ou ícone pequeno sobre fundo claro.
 
-O tom #26002e é uma variação escura funcional derivada da família dominante, usada como texto em superfícies pink para atingir contraste de texto comum. Neutros funcionais: #FBF8F6 e #FFFFFF. Texto secundário sobre papel: #6f5f70. Não usar branco sobre verde-limão.
+O tom #26002e é uma variação escura funcional derivada da família dominante, usada como texto em superfícies pink para atingir contraste de texto comum. O tom #B0004F é uma variação escurecida do pink, reservada para textos pequenos sobre fundos claros (aprox. 7,10:1 sobre branco e 6,71:1 sobre o papel). Neutros funcionais: #FBF8F6 e #FFFFFF. Texto secundário sobre papel: #6f5f70. Não usar branco sobre verde-limão.
 
 ## Tipografia
 
