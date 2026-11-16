@@ -116,3 +116,16 @@ Os oito títulos H2 das seções recebem, a cada carregamento, estilos de entrad
 
 ### Transição contínua entre seções pelo scroll
 Todas as seções principais, incluindo a faixa de áreas e a abertura, recebem um efeito ligado diretamente à posição de rolagem. O conteúdo interno acompanha a entrada e a saída da viewport com deslocamento vertical curto, escala e opacidade discretos; o ponto de maior estabilidade ocorre quando o centro da seção cruza o centro da tela. O movimento é menor em telas de até 820 px. Apenas os containers internos são transformados: fundos, altura, espaçamentos, ordem do documento e navegação permanecem normais. O cálculo é atualizado em requestAnimationFrame, com listeners passivos, e é removido quando prefers-reduced-motion está ativo.
+
+
+## Transições imersivas das seções
+
+A transição ligada ao scroll foi intensificada e aplicada ao painel inteiro, inclusive ao plano de fundo. As seções alternam entre dois movimentos:
+- **Profundidade:** perspectiva 3D e aproximação progressiva do fundo até a posição de destaque.
+- **Descida:** deslocamento de cima para baixo, com leve inclinação 3D, até o alinhamento central.
+
+Escala, opacidade, raio de borda e sombra também variam com a posição na viewport, reforçando a sensação de camadas. A página mantém rolagem nativa e os elementos continuam no fluxo do documento; não há pinning ou travamento em slides. A intensidade é reduzida em telas móveis e anulada por `prefers-reduced-motion`.
+
+## Hero — maçã fotográfica
+
+A composição abstrata anterior foi substituída por uma imagem original de maçã vermelha com folha verde, recortada em transparência e otimizada em WebP. A maçã flutua e inclina levemente em loop lento, enquanto os anéis decorativos continuam orbitando ao fundo.

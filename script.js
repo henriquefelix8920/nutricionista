@@ -122,37 +122,48 @@
 
     var viewportHeight = Math.max(window.innerHeight || 1, 1);
     var compact = window.innerWidth <= 820;
-    var travel = compact ? 20 : 28;
-    var scaleDepth = compact ? 0.005 : 0.008;
-    var opacityDepth = compact ? 0.035 : 0.055;
-    var margin = viewportHeight * 0.22;
 
     scrollTransitionTargets.forEach(function (item) {
-      var rect = item.section.getBoundingClientRect();
+      var section = item.section;
+      var rect = section.getBoundingClientRect();
+      var margin = viewportHeight * 0.35;
+
       if (rect.bottom < -margin || rect.top > viewportHeight + margin) {
-        item.target.classList.remove("scroll-flow-active");
+        section.classList.remove("scroll-depth-active");
         return;
       }
 
-      item.target.classList.add("scroll-flow-active");
-      var progress = (viewportHeight - rect.top) / Math.max(viewportHeight + rect.height, 1);
-      progress = Math.max(0, Math.min(1, progress));
+      section.classList.add("scroll-depth-active");
+      var centerOffset = rect.top + rect.height * 0.5 - viewportHeight * 0.5;
+      var normalized = centerOffset / Math.max((rect.height + viewportHeight) * 0.5, 1);
+      var edge = Math.max(0, Math.min(1, Math.abs(normalized)));
+      var fromBelow = normalized > 0;
 
-      /* The section is most settled as its center passes through the viewport center. */
-      var edge = Math.min(1, Math.abs(progress - 0.5) * 2);
-      var y = ((0.5 - progress) * travel).toFixed(2) + "px";
-      var scale = (1 - edge * scaleDepth).toFixed(4);
-      var opacity = (1 - edge * opacityDepth).toFixed(3);
+      var y, z, rotateX, scale, opacity;
+      if (item.mode === "back") {
+        /* Every other panel grows out of the distance, like a layer approaching the viewer. */
+        y = (fromBelow ? 18 : -18) * edge;
+        z = -(compact ? 220 : 360) * edge;
+        rotateX = (fromBelow ? 8 : -8) * edge;
+        scale = 1 - (compact ? 0.12 : 0.16) * edge;
+        opacity = 1 - (compact ? 0.22 : 0.30) * edge;
+      } else {
+        /* The alternating panel drops from above and settles as its center reaches the viewport. */
+        y = -(compact ? 145 : 210) * edge;
+        z = -(compact ? 70 : 105) * edge;
+        rotateX = (fromBelow ? 12 : -12) * edge;
+        scale = 1 - (compact ? 0.08 : 0.10) * edge;
+        opacity = 1 - (compact ? 0.24 : 0.32) * edge;
+      }
 
-      if (item.target.style.getPropertyValue("--scroll-flow-y") !== y) {
-        item.target.style.setProperty("--scroll-flow-y", y);
-      }
-      if (item.target.style.getPropertyValue("--scroll-flow-scale") !== scale) {
-        item.target.style.setProperty("--scroll-flow-scale", scale);
-      }
-      if (item.target.style.getPropertyValue("--scroll-flow-opacity") !== opacity) {
-        item.target.style.setProperty("--scroll-flow-opacity", opacity);
-      }
+      section.style.setProperty("--section-flow-y", y.toFixed(1) + "px");
+      section.style.setProperty("--section-flow-z", z.toFixed(1) + "px");
+      section.style.setProperty("--section-flow-rotate", rotateX.toFixed(2) + "deg");
+      section.style.setProperty("--section-flow-scale", scale.toFixed(3));
+      section.style.setProperty("--section-flow-opacity", opacity.toFixed(3));
+      section.style.setProperty("--section-flow-radius", ((compact ? 18 : 28) * edge).toFixed(1) + "px");
+      section.style.setProperty("--section-flow-shadow", (0.26 * edge).toFixed(3));
+      section.style.zIndex = String(2 + Math.round((1 - edge) * 28));
     });
   }
 
@@ -164,13 +175,10 @@
 
   function initScrollTransitions() {
     scrollTransitionTargets = [];
-    document.querySelectorAll("main > section").forEach(function (section) {
-      var selector = section.classList.contains("hero") ? ".hero-grid" : ".container";
-      var target = section.querySelector(selector);
-      if (!target) return;
-
-      target.classList.add("scroll-linked-content");
-      scrollTransitionTargets.push({ section: section, target: target });
+    document.querySelectorAll("main > section").forEach(function (section, index) {
+      var mode = index % 2 === 0 ? "back" : "drop";
+      section.classList.add("scroll-depth-layer", mode === "back" ? "scroll-depth-back" : "scroll-depth-drop");
+      scrollTransitionTargets.push({ section: section, mode: mode });
     });
 
     if (!scrollTransitionBound) {
@@ -188,10 +196,16 @@
       scrollTransitionFrame = 0;
     }
     scrollTransitionTargets.forEach(function (item) {
-      item.target.classList.remove("scroll-linked-content", "scroll-flow-active");
-      item.target.style.removeProperty("--scroll-flow-y");
-      item.target.style.removeProperty("--scroll-flow-scale");
-      item.target.style.removeProperty("--scroll-flow-opacity");
+      var section = item.section;
+      section.classList.remove("scroll-depth-layer", "scroll-depth-back", "scroll-depth-drop", "scroll-depth-active");
+      [
+        "--section-flow-y", "--section-flow-z", "--section-flow-rotate",
+        "--section-flow-scale", "--section-flow-opacity", "--section-flow-radius",
+        "--section-flow-shadow"
+      ].forEach(function (property) {
+        section.style.removeProperty(property);
+      });
+      section.style.removeProperty("z-index");
     });
     scrollTransitionTargets = [];
   }

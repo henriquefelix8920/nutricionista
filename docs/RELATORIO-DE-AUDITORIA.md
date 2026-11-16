@@ -160,3 +160,21 @@ Após o novo deployment, a confirmação possível nesta sessão é a entrega HT
 - JavaScript validado por parse; chaves CSS balanceadas.
 - Sem alteração no HTML; layout e espaçamentos mantidos no código.
 - A renderização visual em navegador real depende de ambiente com acesso ao domínio; a publicação será conferida por status do deployment e respostas HTTP.
+
+
+## Refinamento imersivo do scroll e atualização da hero — 16 de novembro de 2026
+
+- A primeira implementação movia apenas os containers internos e limitava o deslocamento a poucos pixels. Isso não produzia a leitura de uma seção inteira avançando no espaço.
+- A camada de scroll foi refeita para transformar cada seção de `main`, incluindo seu plano de fundo. A ordem alterna entre aproximação em perspectiva (translateZ/scale) e descida a partir de cima (translateY/rotateX).
+- O ponto de maior presença é o centro da viewport; nas bordas, as seções ficam menores, mais distantes, parcialmente transparentes, com cantos arredondados e sombra suave. A seção em foco recebe prioridade de empilhamento.
+- A rolagem permanece nativa; não há seções fixas, pinning, alteração da ordem do DOM ou alteração dos espaçamentos de fluxo.
+- A intensidade cai em telas até 820 px e é totalmente removida com `prefers-reduced-motion`.
+- A arte vetorial abstrata da hero foi substituída por `assets/apple-photo.webp`, imagem original gerada para a página, transparente, com animação de flutuação e inclinação.
+- O HTML da hero foi simplificado; texto e legenda da marca foram preservados.
+
+### Verificações estáticas
+- JavaScript validado por parse V8.
+- Regras CSS de perspectiva, modos alternados, sombra/raio de borda e fallback reduced-motion conferidas.
+- Imagem WebP validada como RGBA/transparente antes da conversão, com 480 × 439 px após otimização.
+- Conteúdo, links, navegação e textos existentes não foram alterados.
+- A confirmação visual em navegador real continua dependente de ambiente com acesso externo habilitado.

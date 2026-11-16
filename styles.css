@@ -133,34 +133,12 @@ h3 { margin-bottom: 13px; font-size: 1.32rem; line-height: 1.2; letter-spacing: 
 .art-orbit { position: absolute; border: 1px solid rgba(66,18,76,.27); border-radius: 50%; }
 .art-orbit-one { width: 112%; aspect-ratio: 1; transform: rotate(32deg) scaleY(.64); }
 .art-orbit-two { width: 122%; aspect-ratio: 1; transform: rotate(-31deg) scaleY(.5); }
-.plate {
-  position: relative; display: grid; width: min(65%, 340px); aspect-ratio: 1; place-items: center;
-  border: 13px solid rgba(255,255,255,.88); border-radius: 50%; background: #f1e9de;
-  box-shadow: 0 18px 55px rgba(66,18,76,.17), inset 0 0 0 7px rgba(66,18,76,.08);
-  transform: rotate(-13deg);
+.hero-apple {
+  position: relative; z-index: 1; display: block; width: min(94%, 460px); max-height: 94%;
+  height: auto; object-fit: contain; filter: drop-shadow(0 26px 26px rgba(38,0,46,.24));
+  transform-origin: 50% 56%;
 }
-.plate-center {
-  position: relative; width: 77%; aspect-ratio: 1; overflow: hidden;
-  border: 1px solid rgba(66,18,76,.12); border-radius: 50%; background: #fffaf0;
-}
-.food-shape { position: absolute; display: block; border-radius: 48% 52% 45% 55%; }
-.food-shape-one { width: 47%; height: 37%; top: 15%; left: 11%; background: var(--pink); transform: rotate(29deg); }
-.food-shape-two { width: 42%; height: 49%; right: 11%; bottom: 12%; background: var(--lime); transform: rotate(-32deg); }
-.food-shape-three { width: 30%; height: 29%; bottom: 15%; left: 12%; background: var(--paper); transform: rotate(16deg); }
-.food-leaf { position: absolute; width: 36%; height: 14%; top: 43%; left: 32%; border: 5px solid var(--plum); border-radius: 100% 0 100% 0; transform: rotate(-35deg); }
-.food-dot { position: absolute; width: 9%; aspect-ratio: 1; border-radius: 50%; background: var(--plum); }
-.food-dot-one { top: 16%; right: 19%; }
-.food-dot-two { bottom: 20%; right: 18%; width: 5%; }
-.art-note {
-  position: absolute; z-index: 2; display: flex; align-items: center; gap: 11px;
-  border-radius: 12px; color: var(--ink-pink); font-size: .77rem; font-weight: 700; line-height: 1.4;
-  box-shadow: 0 14px 36px rgba(66,18,76,.16);
-}
-.art-note-top { top: 12%; left: 5%; padding: 15px 18px; background: var(--lime); transform: rotate(-5deg); }
-.art-note-bottom { right: 4%; bottom: 11%; padding: 15px 18px; background: var(--paper); transform: rotate(4deg); }
-.note-spark { font-size: 1.8rem; }
-.note-line { width: 26px; height: 2px; background: var(--pink); }
-.art-stem { position: absolute; z-index: 1; right: 4%; top: 5%; width: 26%; transform: rotate(17deg); }
+
 .art-caption { margin: 16px 0 0; color: rgba(255,255,255,.78); font-family: var(--font-display); font-size: 1.1rem; font-style: italic; text-align: center; }
 .art-caption span { padding-right: 7px; color: var(--lime); font-family: var(--font-body); font-style: normal; }
 .hero-bottom-line { position: absolute; right: var(--gutter); bottom: 0; left: var(--gutter); display: flex; justify-content: space-between; }
@@ -433,11 +411,7 @@ a.contact-card:hover { transform: translateY(-4px); border-color: var(--pink); }
   .hero-meta span { padding-inline: 8px; font-size: .61rem; }
   .hero-meta span:first-child { padding-left: 0; }
   .hero-art { min-height: min(108vw, 420px); border-radius: 43% 43% 38% 38% / 40% 40% 35% 35%; }
-  .plate { width: 65%; border-width: 10px; }
-  .art-note { font-size: .68rem; }
-  .art-note-top { top: 10%; left: 2%; padding: 12px; }
-  .art-note-bottom { right: 2%; bottom: 9%; padding: 12px; }
-  .art-stem { width: 22%; }
+  .hero-apple { width: min(94%, 390px); }
   .intro-band-inner { min-height: 76px; flex-wrap: wrap; justify-content: center; gap: 8px 15px; padding-block: 17px; }
   .intro-band-inner > span:not(.band-star) { font-size: .63rem; }
   .band-star { font-size: .8rem; }
@@ -573,16 +547,10 @@ html.motion-ready .hero-art.motion-visible .art-orbit-one {
 html.motion-ready .hero-art.motion-visible .art-orbit-two {
   rotate: 0deg; animation: mc-orbit-reverse 76s linear infinite; transform-origin: center;
 }
-html.motion-ready .hero-art.motion-visible .plate { translate: 0 0; animation: mc-plate 7.6s ease-in-out infinite; }
-html.motion-ready .hero-art.motion-visible .art-note-top { translate: 0 0; animation: mc-note 6.4s ease-in-out infinite; }
-html.motion-ready .hero-art.motion-visible .art-note-bottom { translate: 0 0; animation: mc-note-reverse 7.2s ease-in-out infinite; }
-html.motion-ready .hero-art.motion-visible .art-stem {
-  rotate: 0deg; animation: mc-stem 8.4s ease-in-out infinite; transform-origin: 74% 88%;
+html.motion-ready .hero-art.motion-visible .hero-apple {
+  translate: 0 0; rotate: -1deg; scale: 1;
+  animation: mc-apple-float 6.2s cubic-bezier(.42, 0, .58, 1) infinite;
 }
-html.motion-ready .hero-art.motion-visible .food-shape-one { translate: 0 0; animation: mc-food 8.2s ease-in-out infinite; }
-html.motion-ready .hero-art.motion-visible .food-shape-two { translate: 0 0; animation: mc-food-reverse 9.6s ease-in-out infinite; }
-html.motion-ready .hero-art.motion-visible .food-shape-three { translate: 0 0; animation: mc-food 7.3s ease-in-out infinite reverse; }
-html.motion-ready .hero-art.motion-visible .food-leaf { rotate: 0deg; animation: mc-leaf 6.8s ease-in-out infinite; }
 html.motion-ready .hero-art-wrap.motion-parallax {
   translate: 0 var(--hero-parallax-y, 0px);
   transition: translate 180ms linear;
@@ -643,12 +611,10 @@ html.motion-ready .floating-whatsapp:active { transform: translateY(0) scale(.99
 
 @keyframes mc-orbit { to { rotate: 360deg; } }
 @keyframes mc-orbit-reverse { to { rotate: -360deg; } }
-@keyframes mc-plate { 0%,100% { translate: 0 0; } 50% { translate: 0 -6px; } }
-@keyframes mc-note { 0%,100% { translate: 0 0; } 50% { translate: 0 -7px; } }
-@keyframes mc-note-reverse { 0%,100% { translate: 0 0; } 50% { translate: 0 6px; } }
-@keyframes mc-stem { 0%,100% { rotate: 0deg; } 50% { rotate: 2deg; } }
-@keyframes mc-food { 0%,100% { translate: 0 0; } 50% { translate: 2px -3px; } }
-@keyframes mc-food-reverse { 0%,100% { translate: 0 0; } 50% { translate: -2px 3px; } }
+@keyframes mc-apple-float {
+  0%,100% { translate: 0 0; rotate: -1deg; scale: 1; }
+  50% { translate: 0 -14px; rotate: 1.4deg; scale: 1.018; }
+}
 @keyframes mc-leaf { 0%,100% { rotate: 0deg; } 50% { rotate: 3deg; } }
 @keyframes mc-star { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
 @keyframes mc-branch { 0%,100% { scale: 1; rotate: 0deg; } 50% { scale: 1.025; rotate: 1deg; } }
@@ -674,6 +640,9 @@ html.motion-ready .floating-whatsapp:active { transform: translateY(0) scale(.99
     scale: none !important; rotate: none !important; filter: none !important; transform: none !important;
   }
   html.motion-ready .hero-art-wrap.motion-parallax { translate: none !important; }
+  html.motion-ready main > section.scroll-depth-layer {
+    transform: none !important; opacity: 1 !important; border-radius: 0 !important; box-shadow: none !important;
+  }
   html.motion-ready .motion-tilt, html.motion-ready .motion-tilt:hover,
   html.motion-ready .motion-tilt.motion-tilting { transform: none !important; }
 }
@@ -728,14 +697,22 @@ html.motion-ready .motion-reveal.motion-title.motion-visible {
 }
 
 
-/* Scroll-linked section flow: progress is driven by requestAnimationFrame in script.js.
-   Only inner content moves; section backgrounds and document flow remain untouched. */
-html.motion-ready .scroll-linked-content {
-  opacity: var(--scroll-flow-opacity, 1);
-  translate: 0 var(--scroll-flow-y, 0px);
-  scale: var(--scroll-flow-scale, 1);
-  transform-origin: center center;
+/* Alternating full-section 3D flow — panels approach from depth, then descend from above.
+   The section remains in normal document flow; only its visual plane is transformed. */
+html.motion-ready main > section.scroll-depth-layer {
+  position: relative;
+  z-index: 1;
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transform: perspective(1500px)
+    translate3d(0, var(--section-flow-y, 0px), var(--section-flow-z, 0px))
+    rotateX(var(--section-flow-rotate, 0deg))
+    scale(var(--section-flow-scale, 1));
+  opacity: var(--section-flow-opacity, 1);
+  border-radius: var(--section-flow-radius, 0px);
+  box-shadow: 0 34px 90px rgba(24, 0, 32, var(--section-flow-shadow, 0));
 }
-html.motion-ready .scroll-linked-content.scroll-flow-active {
-  will-change: opacity, translate, scale;
+html.motion-ready main > section.scroll-depth-layer.scroll-depth-active {
+  will-change: transform, opacity, border-radius, box-shadow;
 }
