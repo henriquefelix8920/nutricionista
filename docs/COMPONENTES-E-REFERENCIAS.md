@@ -16,7 +16,7 @@ Data de consulta das referências: 15 de novembro de 2026.
 | Seção | Componente/padrão | Implementação | Justificativa |
 |---|---|---|---|
 | Cabeçalho e navegação | Header responsivo + menu móvel | HTML, CSS e JavaScript próprios | Acesso rápido ao CTA e navegação por âncoras, sem dependência de biblioteca. |
-| Hero | Split editorial com ilustração abstrata | CSS + SVG próprio | Apresentar proposta de valor e CTA sem foto de banco ou retrato não fornecido. |
+| Hero | Split editorial com maçã fotográfica original | CSS + imagem WebP gerada para o projeto | Apresentar a proposta de valor e criar um ponto focal visual coerente com nutrição. |
 | Princípios | Cards editoriais | CSS próprio | Traduzir individualidade, ciência e constância em leitura escaneável. |
 | Atendimentos | Grid de serviços | CSS próprio | Organizar as linhas de cuidado do briefing sem criar páginas desnecessárias. |
 | Programa | Painel de destaque + lista numerada | CSS e SVG próprios | Explicar de forma objetiva o programa de três meses. |

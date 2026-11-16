@@ -253,3 +253,40 @@ Contrastes calculados a partir das cores declaradas: ameixa sobre papel 13,96:1;
 | Status do deploy e HTTP 200 dos arquivos | A validar após publicação |
 
 **Conclusão:** a causa de código mais provável para a rolagem pesada em mobile foi removida estruturalmente: nenhum cálculo contínuo de scroll nem transformação 3D de painel é executado no caminho touch. A versão mantém transições visíveis por entradas CSS/IntersectionObserver no celular e o scrub 3D completo em desktop. A suavidade real precisa ser confirmada em aparelhos físicos ou em browser com profiling; não atribuí pontuação de Lighthouse nem FPS sem medição.
+
+
+## Resultado pós-publicação — 16 de novembro de 2026
+
+- Commit da implementação: 9990893190a85c0072033393024f7d3aa55cc608 (branch main).
+- Deployment Vercel: READY, target production, ID dpl_77VDv6EnLj4Nw1mjpt5x79gDekrz.
+- Alias de produção: https://nutricionista-fawn.vercel.app/.
+- HTML, styles.css, script.js e assets/apple-photo.webp responderam HTTP 200 no alias de produção; a imagem foi servida com Content-Type image/webp.
+- Checagem pós-commit: JavaScript parse válido; CSS com chaves balanceadas; uma tag H1, 10 seções, 19 IDs únicos, 10 âncoras internas sem destino quebrado.
+- Caminho mobile confirmado no código publicado: o listener de scroll para transições não é registrado quando o modo mobile/touch é selecionado. As entradas alternadas são armadas por IntersectionObserver. Caminho desktop mantém o scrub contínuo só para seções próximas.
+- Foi criado docs/MOTION-DESIGN.md com storyboard, fallback e distinção desktop/mobile.
+
+### Payload estático do commit publicado
+
+Tamanhos exatos da árvore do GitHub após a otimização (não representam o tamanho comprimido transferido):
+
+| Recurso | Bytes | KiB |
+|---|---:|---:|
+| index.html | 26.281 | 25,67 |
+| styles.css | 47.789 | 46,67 |
+| script.js | 19.732 | 19,27 |
+| apple-photo.webp | 18.596 | 18,16 |
+| brand-sprig.svg | 568 | 0,55 |
+| favicon.svg | 375 | 0,37 |
+| **Total** | **113.341** | **110,68** |
+
+O aumento de cerca de 6,6 KiB no total medido em relação à versão anterior vem da lógica de observers e da separação de comportamento desktop/touch; não foi adicionada biblioteca, framework ou runtime externo.
+
+### Pendências técnicas de SEO
+
+- A página tem title, description e metadados Open Graph básicos. Não há og:image.
+- O robots.txt permite rastreamento. Sitemap XML e canonical ainda não estão configurados, aguardando a confirmação de um domínio próprio definitivo; evitar apontar canonical para um subdomínio de preview.
+- As fontes DM Sans e DM Serif Display continuam vindo do Google Fonts. O HTML usa preconnect e display=swap; auto-hospedar fontes pode reduzir uma dependência externa, mas exigiria obter/validar os arquivos licenciados e medir o impacto antes de mexer na tipografia.
+
+### Limite da conclusão de performance
+
+A mudança elimina o loop de JavaScript de rolagem no celular e reduz repinturas/camadas antecipadas no código; isso é uma correção estrutural para o gargalo identificado. Não há medição de FPS, Lighthouse, Core Web Vitals, memória de GPU nem teste em aparelhos físicos nesta sessão. Portanto, a fluidez melhorada é esperada pela redução do trabalho por frame, mas ainda precisa de validação real em celular. O navegador automatizado externo segue bloqueado no ambiente.

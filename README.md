@@ -11,7 +11,7 @@ HTML semântico, CSS moderno e JavaScript sem dependências de runtime. Essa esc
 - `index.html`: conteúdo e estrutura da página.
 - `styles.css`: design system, componentes visuais e breakpoints.
 - `script.js`: menu móvel, entradas por viewport e transições responsivas entre seções.
-- `assets/`: símbolo botânico provisório e favicon em SVG.
+- `assets/`: símbolo botânico, favicon em SVG e imagem WebP original da maçã usada no hero.
 - `docs/`: estratégia, design system, referências, pendências e relatório de auditoria.
 
 ## Desenvolvimento
