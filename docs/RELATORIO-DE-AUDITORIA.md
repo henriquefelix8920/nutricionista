@@ -292,9 +292,10 @@ O aumento de cerca de 6,6 KiB no total medido em relação à versão anterior v
 A mudança elimina o loop de JavaScript de rolagem no celular e reduz repinturas/camadas antecipadas no código; isso é uma correção estrutural para o gargalo identificado. Não há medição de FPS, Lighthouse, Core Web Vitals, memória de GPU nem teste em aparelhos físicos nesta sessão. Portanto, a fluidez melhorada é esperada pela redução do trabalho por frame, mas ainda precisa de validação real em celular. O navegador automatizado externo segue bloqueado no ambiente.
 
 
-## Atualização — atlas vetorial único de frutas
-- Criado `assets/fruit-atlas.svg`: SVG transparente de 400×400 px, grade 4×4 com 16 células iguais.
-- Os ícones substituídos no HTML são recortes CSS que reutilizam a mesma imagem em 10 elementos; não foram criados arquivos individuais por fruta.
-- Os movimentos usam CSS `transform` (giro/balanço/flutuação), habilitados apenas enquanto os cards estão próximos/visíveis por `IntersectionObserver`. O observador de ambient motion também acompanha os cards de atendimento.
-- Em touch/mobile os movimentos são desacelerados; `prefers-reduced-motion` continua respeitado. Não foram adicionados listeners de scroll ou cálculos por quadro para animar as frutas.
-- Limitação de validação: atualização conferida por inspeção estática de HTML/CSS/JS e pelo pipeline de publicação; não foi possível executar inspeção visual ou Lighthouse em navegador/dispositivo real neste ambiente.
+## Atualização — atlas fotográfico de frutas
+- Criadas três faixas WebP fotográficas com fundo transparente, cada uma com quatro frutas em células quadradas de 64×64 px. Cada faixa mede 256×64 px.
+- Arquivos publicados: `assets/fruit-atlas-row-1.webp` (6.396 B), `assets/fruit-atlas-row-2.webp` (6.860 B) e `assets/fruit-atlas-row-3.webp` (6.242 B), totalizando 19.498 bytes (aprox. 19,0 KiB).
+- O HTML usa 11 instâncias de frutas: três princípios, quatro especialidades, abacaxi e romã no painel do programa, e duas modalidades de atendimento. Cada instância escolhe a faixa e a célula por classes CSS.
+- Os movimentos usam CSS `transform` (giro/balanço/flutuação), habilitados apenas enquanto os cards estão próximos/visíveis por `IntersectionObserver`. Não há loop JavaScript por quadro para animar as frutas.
+- Em touch/mobile os movimentos são desacelerados; `prefers-reduced-motion` continua respeitado. Nenhuma dependência foi adicionada. O texto “3 meses” permanece em conteúdo acessível do programa; o antigo selo numérico recebe a romã fotográfica.
+- Validação estática: transparência e dimensões dos três WebP conferidas; CSS usa grade de quatro colunas por faixa; HTML contém 11 elementos de fruta e nenhuma referência ao atlas SVG antigo. Não foi possível executar inspeção visual final em navegador real neste ambiente.

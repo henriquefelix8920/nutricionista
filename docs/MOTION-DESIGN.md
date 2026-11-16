@@ -40,3 +40,9 @@ CSS moderno + JavaScript nativo (IntersectionObserver, requestAnimationFrame e l
 - will-change não é atribuído a todos os elementos escondidos; é limitado às seções próximas no desktop.
 - No mobile, não há listener de scroll para o efeito entre seções; entradas são acionadas por IntersectionObserver.
 - A performance real (FPS, Lighthouse e scroll em aparelhos físicos) precisa ser verificada em browser/dispositivo; auditoria estática não prova a fluidez final.
+
+
+## Faixas fotográficas de frutas
+- Três WebPs transparentes reúnem doze frutas em três faixas horizontais (quatro células quadradas de 64×64 px por faixa).
+- Os onze elementos compartilham as faixas por recortes CSS; abacaxi e romã animam separadamente no painel do programa, sem animação JavaScript por quadro.
+- Giros, balanços e flutuações usam somente transform e continuam sujeitos ao observer de visibilidade e a `prefers-reduced-motion`.

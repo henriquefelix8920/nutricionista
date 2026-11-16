@@ -143,9 +143,10 @@ A composição abstrata anterior foi substituída por uma imagem original de ma�
 - Loops CSS são pausados quando a aba/documento fica oculto; prefers-reduced-motion limpa observers e mantém todos os conteúdos visíveis.
 
 
-## Atlas vetorial único de frutas
-- Os ícones das seções usam um único arquivo transparente: `assets/fruit-atlas.svg`, uma grade regular 4×4 com 16 frutas.
-- Cada elemento seleciona uma célula com `background-position` e `background-size:400% 400%`; não há 16 arquivos separados.
-- Aplicações: três princípios, quatro especialidades (incluindo conforto e bem-estar intestinal), o programa com selo “3 meses” e as duas modalidades de atendimento.
-- Cada fruta recebe animação CSS independente, variando entre giro lento, balanço e flutuação. Os movimentos usam somente `transform` e só ficam ativos quando o card está próximo/visível.
+## Atlas fotográfico de frutas
+- Os ícones usam três faixas WebP com transparência: `assets/fruit-atlas-row-1.webp`, `assets/fruit-atlas-row-2.webp` e `assets/fruit-atlas-row-3.webp`. Cada faixa mede 256×64 px e contém quatro recortes quadrados de 64×64 px.
+- As faixas totalizam 19.498 bytes (aprox. 19,0 KiB). Cada faixa é reutilizada por múltiplos elementos; não há downloads individuais por fruta.
+- Aplicações: três princípios, quatro especialidades (incluindo conforto e bem-estar intestinal), duas frutas no painel do programa e duas modalidades de atendimento.
+- Os recortes são selecionados por `background-position` e `background-size:400% 100%`. As posições são mapeadas para apple, banana, strawberry, orange; grapes, pineapple, watermelon, mango; pear, kiwi, blueberry e pomegranate.
+- Cada fruta mantém animação CSS independente (giro, balanço ou flutuação), habilitada apenas enquanto o card está próximo/visível. O painel do programa usa abacaxi e romã; “3 meses” continua explícito no conteúdo textual.
 - O comportamento respeita `prefers-reduced-motion`; em telas touch os ciclos ficam mais lentos. Não há loop JavaScript por quadro para animar frutas.

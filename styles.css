@@ -761,20 +761,22 @@ html.motion-paused *::after {
 }
 
 
-/* Atlas vetorial único de frutas: células 4×4 recortadas por background-position. */
-.fruit-sprite{display:block;flex:0 0 auto;width:74px;height:74px;background-image:url("assets/fruit-atlas.svg");background-repeat:no-repeat;background-size:400% 400%;background-position:var(--fruit-x,0%) var(--fruit-y,0%);transform-origin:50% 50%;animation:none}
-.fruit-apple{--fruit-x:0%;--fruit-y:0%}.fruit-banana{--fruit-x:33.3333%;--fruit-y:0%}.fruit-strawberry{--fruit-x:66.6667%;--fruit-y:0%}.fruit-orange{--fruit-x:100%;--fruit-y:0%}
-.fruit-grapes{--fruit-x:0%;--fruit-y:33.3333%}.fruit-pineapple{--fruit-x:33.3333%;--fruit-y:33.3333%}.fruit-watermelon{--fruit-x:66.6667%;--fruit-y:33.3333%}.fruit-kiwi{--fruit-x:100%;--fruit-y:33.3333%}
-.fruit-mango{--fruit-x:0%;--fruit-y:66.6667%}.fruit-pear{--fruit-x:33.3333%;--fruit-y:66.6667%}.fruit-peach{--fruit-x:66.6667%;--fruit-y:66.6667%}.fruit-cherries{--fruit-x:100%;--fruit-y:66.6667%}
-.fruit-blueberry{--fruit-x:0%;--fruit-y:100%}.fruit-lemon{--fruit-x:33.3333%;--fruit-y:100%}.fruit-coconut{--fruit-x:66.6667%;--fruit-y:100%}.fruit-plum{--fruit-x:100%;--fruit-y:100%}
+/* Atlas fotográfico em 3 faixas WebP transparentes; 4 frutas por faixa. */
+.fruit-sprite{display:block;flex:0 0 auto;width:74px;height:74px;background-image:url("assets/fruit-atlas-row-1.webp");background-repeat:no-repeat;background-size:400% 100%;background-position:var(--fruit-x,0%) 50%;transform-origin:50% 50%;animation:none}
+.fruit-row-1{background-image:url("assets/fruit-atlas-row-1.webp")}
+.fruit-row-2{background-image:url("assets/fruit-atlas-row-2.webp")}
+.fruit-row-3{background-image:url("assets/fruit-atlas-row-3.webp")}
+.fruit-apple{--fruit-x:0%}.fruit-banana{--fruit-x:33.3333%}.fruit-strawberry{--fruit-x:66.6667%}.fruit-orange{--fruit-x:100%}
+.fruit-grapes{--fruit-x:0%}.fruit-pineapple{--fruit-x:33.3333%}.fruit-watermelon{--fruit-x:66.6667%}.fruit-mango{--fruit-x:100%}
+.fruit-pear{--fruit-x:0%}.fruit-kiwi{--fruit-x:33.3333%}.fruit-blueberry{--fruit-x:66.6667%}.fruit-pomegranate{--fruit-x:100%}
 .principle-symbol .fruit-sprite{width:78px;height:78px}
 .service-icon.service-fruit{position:relative;display:grid;width:76px;height:76px;place-items:center;overflow:visible;border:0;box-shadow:none}
 .service-fruit .fruit-sprite{width:72px;height:72px}
 .service-fruit-clinical{background:var(--pink)}.service-fruit-sports{background:var(--lime)}.service-fruit-women{background:var(--pink)}.service-fruit-intestinal{background:rgba(138,255,0,.16)}
 .care-graphic.care-fruit{background:rgba(138,255,0,.08)}.care-graphic.care-fruit-online{border-color:var(--pink);background:rgba(254,4,114,.07)}.care-fruit .fruit-sprite{width:88px;height:88px}
-.program-art .program-fruit{position:absolute;z-index:2;top:48%;left:50%;width:132px;height:132px;translate:-50% -50%}
-.program-art .program-label{position:absolute;z-index:3;top:calc(50% + 45px);left:calc(50% + 33px);display:grid;width:90px;height:90px;place-content:center;border-radius:50%;background:var(--lime);color:var(--plum);font-size:3rem;line-height:.76;text-align:center;transform:translate(-50%,-50%) rotate(-8deg);box-shadow:0 0 0 7px var(--pink)}
-.program-art .program-label small{padding-top:6px;font-size:.58rem}
+.program-art .program-fruit{position:absolute;z-index:2;top:48%;left:50%;width:96px;height:96px;translate:-50% -50%}
+.program-art .program-label{position:absolute;z-index:3;top:calc(50% + 38px);left:calc(50% + 33px);display:grid;width:64px;height:64px;place-items:center;border-radius:50%;background:var(--lime);box-shadow:0 0 0 6px var(--pink);transform:translate(-50%,-50%) rotate(-8deg)}
+.program-art .program-label .fruit-sprite{width:56px;height:56px}
 @keyframes mc-fruit-spin{to{transform:rotate(360deg)}}
 @keyframes mc-fruit-sway-a{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-4px) rotate(7deg)}}
 @keyframes mc-fruit-sway-b{0%,100%{transform:translateY(1px) rotate(7deg)}50%{transform:translateY(-5px) rotate(-9deg)}}
@@ -796,9 +798,9 @@ html.motion-ready .motion-in-view .fruit-motion-roll{animation:mc-fruit-roll 13.
 html.motion-ready .motion-in-view .fruit-motion-bob-reverse{animation:mc-fruit-bob-reverse 9.8s ease-in-out infinite}
 @media(max-width:820px){
  .principle-symbol .fruit-sprite{width:74px;height:74px}.care-fruit .fruit-sprite{width:82px;height:82px}
- .program-art .program-fruit{width:118px;height:118px}.program-art .program-label{top:calc(50% + 39px);left:calc(50% + 28px);width:82px;height:82px;font-size:2.7rem}
+ .program-art .program-fruit{width:90px;height:90px}.program-art .program-label{top:calc(50% + 35px);left:calc(50% + 29px);width:58px;height:58px}.program-art .program-label .fruit-sprite{width:50px;height:50px}
  html.motion-ready .motion-in-view .fruit-motion-spin-cw{animation-duration:36s}
  html.motion-ready .motion-in-view .fruit-motion-spin-ccw{animation-duration:39s}
  html.motion-ready .motion-in-view .fruit-motion-sway-a,html.motion-ready .motion-in-view .fruit-motion-sway-b,html.motion-ready .motion-in-view .fruit-motion-sway-c,html.motion-ready .motion-in-view .fruit-motion-bob,html.motion-ready .motion-in-view .fruit-motion-orbit,html.motion-ready .motion-in-view .fruit-motion-float,html.motion-ready .motion-in-view .fruit-motion-roll,html.motion-ready .motion-in-view .fruit-motion-bob-reverse{animation-duration:11s}
 }
-@media(max-width:480px){.program-art{min-height:300px}.program-art .program-fruit{width:110px;height:110px}.program-art .program-label{width:78px;height:78px;font-size:2.55rem}}
+@media(max-width:480px){.program-art{min-height:300px}.program-art .program-fruit{width:84px;height:84px}.program-art .program-label{width:54px;height:54px}.program-art .program-label .fruit-sprite{width:46px;height:46px}}
