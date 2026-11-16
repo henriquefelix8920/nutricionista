@@ -126,7 +126,7 @@
 
   function updateScrollTransitions() {
     scrollTransitionFrame = 0;
-    if (scrollTransitionMode !== "desktop" || (preference && preference.matches)) return;
+    if ((scrollTransitionMode !== "desktop" && scrollTransitionMode !== "mobile") || (preference && preference.matches)) return;
 
     var viewportHeight = Math.max(window.innerHeight || 1, 1);
     var closestItem = null;
@@ -143,7 +143,22 @@
       var fromBelow = normalized > 0;
 
       var y, z, rotateX, scale, opacity;
-      if (item.mode === "back") {
+      if (scrollTransitionMode === "mobile") {
+        /* Same scroll-scrub language as desktop, tuned down for touch screens. */
+        if (item.mode === "back") {
+          y = (fromBelow ? 10 : -10) * edge;
+          z = -150 * edge;
+          rotateX = (fromBelow ? 4.5 : -4.5) * edge;
+          scale = 1 - 0.07 * edge;
+          opacity = 1 - 0.14 * edge;
+        } else {
+          y = -88 * edge;
+          z = -55 * edge;
+          rotateX = (fromBelow ? 5.5 : -5.5) * edge;
+          scale = 1 - 0.045 * edge;
+          opacity = 1 - 0.12 * edge;
+        }
+      } else if (item.mode === "back") {
         y = (fromBelow ? 18 : -18) * edge;
         z = -360 * edge;
         rotateX = (fromBelow ? 8 : -8) * edge;
@@ -192,7 +207,7 @@
   }
 
   function scheduleScrollTransitions() {
-    if (scrollTransitionMode === "desktop" && !scrollTransitionFrame) {
+    if ((scrollTransitionMode === "desktop" || scrollTransitionMode === "mobile") && !scrollTransitionFrame) {
       scrollTransitionFrame = window.requestAnimationFrame(updateScrollTransitions);
     }
   }
@@ -245,7 +260,7 @@
         "scroll-depth-layer",
         item.mode === "back" ? "scroll-depth-back" : "scroll-depth-drop"
       );
-      if (nextMode === "desktop") item.section.style.zIndex = String(index + 1);
+      item.section.style.zIndex = String(index + 1);
     });
 
     scrollSectionObserver = new IntersectionObserver(function (entries) {
@@ -253,26 +268,6 @@
         var item = scrollTransitionTargets.find(function (candidate) {
           return candidate.section === entry.target;
         });
-        if (nextMode === "mobile") {
-          if (entry.isIntersecting) {
-            var targetSection = entry.target;
-            scrollSectionObserver.unobserve(targetSection);
-
-            /* Give the initial 3D pose one paint before settling it into view.
-               This makes the CSS transition reliable on mobile Safari/Chrome
-               without introducing a scroll listener or a per-frame JS loop. */
-            window.requestAnimationFrame(function () {
-              window.requestAnimationFrame(function () {
-                if (scrollTransitionMode === "mobile" &&
-                    targetSection.classList.contains("scroll-depth-layer")) {
-                  targetSection.classList.add("scroll-depth-visible");
-                }
-              });
-            });
-          }
-          return;
-        }
-
         entry.target.classList.toggle("scroll-depth-active", entry.isIntersecting);
         if (!entry.isIntersecting && entry.target === frontScrollSection) {
           entry.target.style.zIndex = String(item ? item.index + 1 : 1);
@@ -281,18 +276,18 @@
         if (entry.isIntersecting) scheduleScrollTransitions();
       });
     }, nextMode === "mobile"
-      ? { threshold: 0.01, rootMargin: "0px 0px 16% 0px" }
+      ? { threshold: 0, rootMargin: "100% 0px" }
       : { threshold: 0, rootMargin: "110% 0px" });
 
     scrollTransitionTargets.forEach(function (item) {
       scrollSectionObserver.observe(item.section);
     });
 
-    if (nextMode === "desktop") {
-      window.addEventListener("scroll", scheduleScrollTransitions, { passive: true });
-      scrollTransitionBound = true;
-      scheduleScrollTransitions();
-    }
+    /* One passive scroll listener schedules at most one compositor update per frame.
+       The observer limits measurements to sections near the viewport on both modes. */
+    window.addEventListener("scroll", scheduleScrollTransitions, { passive: true });
+    scrollTransitionBound = true;
+    scheduleScrollTransitions();
   }
 
   function handleScrollTransitionResize() {
