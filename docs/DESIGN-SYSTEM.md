@@ -112,3 +112,7 @@ Na revisão posterior ao relato de sobreposição, foram reduzidos os deslocamen
 
 ### Transições dos títulos de seção
 Os oito títulos H2 das seções recebem, a cada carregamento, estilos de entrada sorteados sem repetição na mesma página. As variações incluem subida com desfoque, deslocamento lateral, zoom, queda suave, inclinação, foco progressivo e movimento diagonal. Duração e atraso também variam levemente. Os títulos não usam clip-path como estado inicial, para que continuem detectáveis pelo IntersectionObserver e nunca permaneçam escondidos enquanto aguardam a rolagem. A preferência por movimento reduzido continua desativando as transições.
+
+
+### Transição contínua entre seções pelo scroll
+Todas as seções principais, incluindo a faixa de áreas e a abertura, recebem um efeito ligado diretamente à posição de rolagem. O conteúdo interno acompanha a entrada e a saída da viewport com deslocamento vertical curto, escala e opacidade discretos; o ponto de maior estabilidade ocorre quando o centro da seção cruza o centro da tela. O movimento é menor em telas de até 820 px. Apenas os containers internos são transformados: fundos, altura, espaçamentos, ordem do documento e navegação permanecem normais. O cálculo é atualizado em requestAnimationFrame, com listeners passivos, e é removido quando prefers-reduced-motion está ativo.

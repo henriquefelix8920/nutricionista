@@ -144,3 +144,19 @@ Após o novo deployment, a confirmação possível nesta sessão é a entrega HT
 - Os quatro títulos reportados não recebem mais a classe `motion-mask`.
 - JavaScript validado por parse; seletores e classes das oito variações conferidos no CSS.
 - A confirmação visual em browser continua dependente de uma sessão com acesso externo habilitado; a checagem HTTP do deployment será realizada após publicação.
+
+
+## Transição contínua de seções sincronizada ao scroll — 16 de novembro de 2026
+
+- Adicionada progressão contínua para os containers internos de todas as seções diretas de `main`, do hero ao contato.
+- O deslocamento vertical varia suavemente entre +14 px e -14 px no desktop, acompanhando a posição da seção na viewport; em telas até 820 px, a amplitude cai para ±10 px.
+- Escala e opacidade variam pouco nas bordas do percurso e ficam em seu estado integral quando o centro da seção passa pelo centro da viewport.
+- Somente o conteúdo interno é transformado. Fundos e fluxo do documento não são fixados, sobrepostos ou reordenados, evitando alteração dos espaçamentos e da estrutura.
+- Atualização com requestAnimationFrame e listeners passivos; cálculo interrompido/limpo quando `prefers-reduced-motion: reduce` é ativado.
+- Não foi adicionada biblioteca externa nem modificado o HTML.
+
+### Verificações estáticas
+- Os 10 elementos `main > section` possuem um container interno selecionável (hero-grid no hero, .container nas demais).
+- JavaScript validado por parse; chaves CSS balanceadas.
+- Sem alteração no HTML; layout e espaçamentos mantidos no código.
+- A renderização visual em navegador real depende de ambiente com acesso ao domínio; a publicação será conferida por status do deployment e respostas HTTP.

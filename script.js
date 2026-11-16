@@ -51,6 +51,9 @@
   var observer = null;
   var initialized = false;
   var parallaxBound = false;
+  var scrollTransitionTargets = [];
+  var scrollTransitionFrame = 0;
+  var scrollTransitionBound = false;
 
   function addReveal(selector, delay, stagger, extra, targets) {
     document.querySelectorAll(selector).forEach(function (element, index) {
@@ -111,6 +114,86 @@
       parallaxBound = true;
     }
     schedule();
+  }
+
+  function updateScrollTransitions() {
+    scrollTransitionFrame = 0;
+    if (preference && preference.matches) return;
+
+    var viewportHeight = Math.max(window.innerHeight || 1, 1);
+    var compact = window.innerWidth <= 820;
+    var travel = compact ? 20 : 28;
+    var scaleDepth = compact ? 0.005 : 0.008;
+    var opacityDepth = compact ? 0.035 : 0.055;
+    var margin = viewportHeight * 0.22;
+
+    scrollTransitionTargets.forEach(function (item) {
+      var rect = item.section.getBoundingClientRect();
+      if (rect.bottom < -margin || rect.top > viewportHeight + margin) {
+        item.target.classList.remove("scroll-flow-active");
+        return;
+      }
+
+      item.target.classList.add("scroll-flow-active");
+      var progress = (viewportHeight - rect.top) / Math.max(viewportHeight + rect.height, 1);
+      progress = Math.max(0, Math.min(1, progress));
+
+      /* The section is most settled as its center passes through the viewport center. */
+      var edge = Math.min(1, Math.abs(progress - 0.5) * 2);
+      var y = ((0.5 - progress) * travel).toFixed(2) + "px";
+      var scale = (1 - edge * scaleDepth).toFixed(4);
+      var opacity = (1 - edge * opacityDepth).toFixed(3);
+
+      if (item.target.style.getPropertyValue("--scroll-flow-y") !== y) {
+        item.target.style.setProperty("--scroll-flow-y", y);
+      }
+      if (item.target.style.getPropertyValue("--scroll-flow-scale") !== scale) {
+        item.target.style.setProperty("--scroll-flow-scale", scale);
+      }
+      if (item.target.style.getPropertyValue("--scroll-flow-opacity") !== opacity) {
+        item.target.style.setProperty("--scroll-flow-opacity", opacity);
+      }
+    });
+  }
+
+  function scheduleScrollTransitions() {
+    if (!scrollTransitionFrame) {
+      scrollTransitionFrame = window.requestAnimationFrame(updateScrollTransitions);
+    }
+  }
+
+  function initScrollTransitions() {
+    scrollTransitionTargets = [];
+    document.querySelectorAll("main > section").forEach(function (section) {
+      var selector = section.classList.contains("hero") ? ".hero-grid" : ".container";
+      var target = section.querySelector(selector);
+      if (!target) return;
+
+      target.classList.add("scroll-linked-content");
+      scrollTransitionTargets.push({ section: section, target: target });
+    });
+
+    if (!scrollTransitionBound) {
+      window.addEventListener("scroll", scheduleScrollTransitions, { passive: true });
+      window.addEventListener("resize", scheduleScrollTransitions, { passive: true });
+      scrollTransitionBound = true;
+    }
+
+    updateScrollTransitions();
+  }
+
+  function clearScrollTransitions() {
+    if (scrollTransitionFrame) {
+      window.cancelAnimationFrame(scrollTransitionFrame);
+      scrollTransitionFrame = 0;
+    }
+    scrollTransitionTargets.forEach(function (item) {
+      item.target.classList.remove("scroll-linked-content", "scroll-flow-active");
+      item.target.style.removeProperty("--scroll-flow-y");
+      item.target.style.removeProperty("--scroll-flow-scale");
+      item.target.style.removeProperty("--scroll-flow-opacity");
+    });
+    scrollTransitionTargets = [];
   }
 
   function applyRandomTitleTransitions() {
@@ -222,6 +305,7 @@
 
       root.classList.add("motion-ready");
       initialized = true;
+      initScrollTransitions();
       if (observer) observer.disconnect();
       observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -254,6 +338,7 @@
   function onPreferenceChange(event) {
     if (event.matches) {
       if (observer) observer.disconnect();
+      clearScrollTransitions();
       root.classList.remove("motion-ready", "motion-entered");
     } else {
       initialize();

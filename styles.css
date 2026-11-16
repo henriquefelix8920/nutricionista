@@ -726,3 +726,16 @@ html.motion-ready .motion-reveal.motion-title.motion-visible {
   opacity: 1; translate: 0 0; scale: 1; rotate: 0deg; filter: blur(0);
   will-change: auto;
 }
+
+
+/* Scroll-linked section flow: progress is driven by requestAnimationFrame in script.js.
+   Only inner content moves; section backgrounds and document flow remain untouched. */
+html.motion-ready .scroll-linked-content {
+  opacity: var(--scroll-flow-opacity, 1);
+  translate: 0 var(--scroll-flow-y, 0px);
+  scale: var(--scroll-flow-scale, 1);
+  transform-origin: center center;
+}
+html.motion-ready .scroll-linked-content.scroll-flow-active {
+  will-change: opacity, translate, scale;
+}
