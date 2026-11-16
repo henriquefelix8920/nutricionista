@@ -299,3 +299,10 @@ A mudança elimina o loop de JavaScript de rolagem no celular e reduz repinturas
 - Os movimentos usam CSS `transform` (giro/balanço/flutuação), habilitados apenas enquanto os cards estão próximos/visíveis por `IntersectionObserver`. Não há loop JavaScript por quadro para animar as frutas.
 - Em touch/mobile os movimentos são desacelerados; `prefers-reduced-motion` continua respeitado. Nenhuma dependência foi adicionada. O texto “3 meses” permanece em conteúdo acessível do programa; o antigo selo numérico recebe a romã fotográfica.
 - Validação estática: transparência e dimensões dos três WebP conferidas; CSS usa grade de quatro colunas por faixa; HTML contém 11 elementos de fruta e nenhuma referência ao atlas SVG antigo. Não foi possível executar inspeção visual final em navegador real neste ambiente.
+
+
+## Atualização — retrato e transições mobile
+- A arte abstrata da seção “Prazer, sou a Marina” foi substituída pela imagem informada pelo cliente, em proporção retangular 4:5, com `object-fit: cover`, `loading="lazy"` e `decoding="async"`.
+- No celular, as transições entre seções agora aguardam dois frames antes de concluir a entrada visual, para garantir que o estado 3D inicial seja pintado. O movimento de profundidade (seções ímpares) e descida (seções pares) está mais evidente.
+- A ativação continua por IntersectionObserver, sem loop de scroll JavaScript; a preferência `prefers-reduced-motion` continua prevalecendo.
+- Testes estáticos pós-alteração pendentes de execução. A foto permanece referenciada pela URL original fornecida pelo cliente (não foi copiada para o repositório).

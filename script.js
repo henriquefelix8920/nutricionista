@@ -255,8 +255,20 @@
         });
         if (nextMode === "mobile") {
           if (entry.isIntersecting) {
-            entry.target.classList.add("scroll-depth-visible");
-            scrollSectionObserver.unobserve(entry.target);
+            var targetSection = entry.target;
+            scrollSectionObserver.unobserve(targetSection);
+
+            /* Give the initial 3D pose one paint before settling it into view.
+               This makes the CSS transition reliable on mobile Safari/Chrome
+               without introducing a scroll listener or a per-frame JS loop. */
+            window.requestAnimationFrame(function () {
+              window.requestAnimationFrame(function () {
+                if (scrollTransitionMode === "mobile" &&
+                    targetSection.classList.contains("scroll-depth-layer")) {
+                  targetSection.classList.add("scroll-depth-visible");
+                }
+              });
+            });
           }
           return;
         }
@@ -269,7 +281,7 @@
         if (entry.isIntersecting) scheduleScrollTransitions();
       });
     }, nextMode === "mobile"
-      ? { threshold: 0.04, rootMargin: "0px 0px -8% 0px" }
+      ? { threshold: 0.01, rootMargin: "0px 0px 16% 0px" }
       : { threshold: 0, rootMargin: "110% 0px" });
 
     scrollTransitionTargets.forEach(function (item) {

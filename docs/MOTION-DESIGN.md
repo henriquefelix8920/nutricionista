@@ -46,3 +46,11 @@ CSS moderno + JavaScript nativo (IntersectionObserver, requestAnimationFrame e l
 - Três WebPs transparentes reúnem doze frutas em três faixas horizontais (quatro células quadradas de 64×64 px por faixa).
 - Os onze elementos compartilham as faixas por recortes CSS; abacaxi e romã animam separadamente no painel do programa, sem animação JavaScript por quadro.
 - Giros, balanços e flutuações usam somente transform e continuam sujeitos ao observer de visibilidade e a `prefers-reduced-motion`.
+
+
+## Ajuste mobile — transições entre seções
+- As entradas móveis agora aguardam dois frames de pintura antes de aplicar o estado final; isso evita que o navegador una o estado inicial e o final antes de exibir a transição.
+- A entrada por profundidade usa um deslocamento 3D mais legível; a seção alternada desce de cima, com perspectiva e escala. O efeito é acionado um pouco antes de a seção ocupar a viewport.
+- Continua sem listener de scroll nem atualização JavaScript por quadro no mobile: apenas um IntersectionObserver e transições CSS de transform/opacity.
+- A preferência `prefers-reduced-motion` continua sendo respeitada.
+- A seção “Prazer, sou a Marina” usa a foto fornecida pelo cliente em proporção retangular 4:5, mantendo a imagem responsiva e com carregamento lazy.
