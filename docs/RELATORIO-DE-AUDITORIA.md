@@ -169,7 +169,7 @@ Após o novo deployment, a confirmação possível nesta sessão é a entrega HT
 - O ponto de maior presença é o centro da viewport; nas bordas, as seções ficam menores, mais distantes, parcialmente transparentes, com cantos arredondados e sombra suave. A seção em foco recebe prioridade de empilhamento.
 - A rolagem permanece nativa; não há seções fixas, pinning, alteração da ordem do DOM ou alteração dos espaçamentos de fluxo.
 - A intensidade cai em telas até 820 px e é totalmente removida com `prefers-reduced-motion`.
-- A arte vetorial abstrata da hero foi substituída por `assets/apple-photo.webp`, imagem original gerada para a página, transparente, com animação de flutuação e inclinação.
+- A arte vetorial abstrata da hero foi substituída por `assets/apple-photo.webp`, imagem original gerada para a página, transparente (WebP, 320 × 292 px, cerca de 18,6 KB), com animação de flutuação e inclinação.
 - O HTML da hero foi simplificado; texto e legenda da marca foram preservados.
 
 ### Verificações estáticas
