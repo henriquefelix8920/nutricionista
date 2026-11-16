@@ -36,3 +36,9 @@ Data de consulta das referências: 15 de novembro de 2026.
 ## Observações
 
 Não foram usados recursos pagos, contas Pro, APIs, bibliotecas de animação, assets de terceiros ou imagens temporárias. O símbolo botânico foi desenhado para este projeto, sem alegar ser o logotipo oficial fornecido pela cliente.
+
+
+## Asset e superfície dourada da hero — 16 de novembro de 2026
+
+- assets/apple-photo.webp: imagem original gerada para a composição da hero, otimizada em WebP local e servida pelo próprio site.
+- O fundo atrás da maçã usa --gold: #D8AE36, cor dourada decorativa localizada; a paleta de identidade principal mantém ameixa/rosa/lima.

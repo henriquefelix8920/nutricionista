@@ -54,6 +54,13 @@
   var scrollTransitionTargets = [];
   var scrollTransitionFrame = 0;
   var scrollTransitionBound = false;
+  var scrollResizeBound = false;
+  var scrollTransitionMode = null;
+  var scrollSectionObserver = null;
+  var frontScrollSection = null;
+  var ambientObserver = null;
+  var ambientTargets = [];
+  var visibilityHandlerBound = false;
 
   function addReveal(selector, delay, stagger, extra, targets) {
     document.querySelectorAll(selector).forEach(function (element, index) {
@@ -106,6 +113,7 @@
       art.style.setProperty("--hero-parallax-y", (progress * -14).toFixed(1) + "px");
     }
     function schedule() {
+      if (window.innerWidth <= 820 || !finePointer.matches || (preference && preference.matches)) return;
       if (!frame) frame = window.requestAnimationFrame(update);
     }
     if (!parallaxBound) {
@@ -118,22 +126,17 @@
 
   function updateScrollTransitions() {
     scrollTransitionFrame = 0;
-    if (preference && preference.matches) return;
+    if (scrollTransitionMode !== "desktop" || (preference && preference.matches)) return;
 
     var viewportHeight = Math.max(window.innerHeight || 1, 1);
-    var compact = window.innerWidth <= 820;
+    var closestItem = null;
+    var closestEdge = Infinity;
 
     scrollTransitionTargets.forEach(function (item) {
       var section = item.section;
+      if (!section.classList.contains("scroll-depth-active")) return;
+
       var rect = section.getBoundingClientRect();
-      var margin = viewportHeight * 0.35;
-
-      if (rect.bottom < -margin || rect.top > viewportHeight + margin) {
-        section.classList.remove("scroll-depth-active");
-        return;
-      }
-
-      section.classList.add("scroll-depth-active");
       var centerOffset = rect.top + rect.height * 0.5 - viewportHeight * 0.5;
       var normalized = centerOffset / Math.max((rect.height + viewportHeight) * 0.5, 1);
       var edge = Math.max(0, Math.min(1, Math.abs(normalized)));
@@ -141,73 +144,217 @@
 
       var y, z, rotateX, scale, opacity;
       if (item.mode === "back") {
-        /* Every other panel grows out of the distance, like a layer approaching the viewer. */
         y = (fromBelow ? 18 : -18) * edge;
-        z = -(compact ? 220 : 360) * edge;
+        z = -360 * edge;
         rotateX = (fromBelow ? 8 : -8) * edge;
-        scale = 1 - (compact ? 0.12 : 0.16) * edge;
-        opacity = 1 - (compact ? 0.22 : 0.30) * edge;
+        scale = 1 - 0.16 * edge;
+        opacity = 1 - 0.30 * edge;
       } else {
-        /* The alternating panel drops from above and settles as its center reaches the viewport. */
-        y = -(compact ? 145 : 210) * edge;
-        z = -(compact ? 70 : 105) * edge;
+        y = -210 * edge;
+        z = -105 * edge;
         rotateX = (fromBelow ? 12 : -12) * edge;
-        scale = 1 - (compact ? 0.08 : 0.10) * edge;
-        opacity = 1 - (compact ? 0.24 : 0.32) * edge;
+        scale = 1 - 0.10 * edge;
+        opacity = 1 - 0.32 * edge;
       }
 
-      section.style.setProperty("--section-flow-y", y.toFixed(1) + "px");
-      section.style.setProperty("--section-flow-z", z.toFixed(1) + "px");
-      section.style.setProperty("--section-flow-rotate", rotateX.toFixed(2) + "deg");
-      section.style.setProperty("--section-flow-scale", scale.toFixed(3));
-      section.style.setProperty("--section-flow-opacity", opacity.toFixed(3));
-      section.style.setProperty("--section-flow-radius", ((compact ? 18 : 28) * edge).toFixed(1) + "px");
-      section.style.setProperty("--section-flow-shadow", (0.26 * edge).toFixed(3));
-      section.style.zIndex = String(2 + Math.round((1 - edge) * 28));
+      /* Two style writes per active panel: compositor-friendly transform and opacity only. */
+      var transform = "translate3d(0," + y.toFixed(1) + "px," + z.toFixed(1) + "px) rotateX(" +
+        rotateX.toFixed(2) + "deg) scale(" + scale.toFixed(3) + ")";
+      var opacityValue = opacity.toFixed(3);
+      if (item.lastTransform !== transform) {
+        section.style.setProperty("--section-flow-transform", transform);
+        item.lastTransform = transform;
+      }
+      if (item.lastOpacity !== opacityValue) {
+        section.style.setProperty("--section-flow-opacity", opacityValue);
+        item.lastOpacity = opacityValue;
+      }
+
+      if (edge < closestEdge) {
+        closestEdge = edge;
+        closestItem = item;
+      }
     });
+
+    /* Stacking changes only when the lead section changes, never on every frame. */
+    if (closestItem && closestItem.section !== frontScrollSection) {
+      if (frontScrollSection) {
+        var previous = scrollTransitionTargets.find(function (item) { return item.section === frontScrollSection; });
+        if (previous) previous.section.style.zIndex = String(previous.index + 1);
+      }
+      closestItem.section.style.zIndex = "50";
+      frontScrollSection = closestItem.section;
+    } else if (!closestItem && frontScrollSection) {
+      var oldFront = scrollTransitionTargets.find(function (item) { return item.section === frontScrollSection; });
+      if (oldFront) oldFront.section.style.zIndex = String(oldFront.index + 1);
+      frontScrollSection = null;
+    }
   }
 
   function scheduleScrollTransitions() {
-    if (!scrollTransitionFrame) {
+    if (scrollTransitionMode === "desktop" && !scrollTransitionFrame) {
       scrollTransitionFrame = window.requestAnimationFrame(updateScrollTransitions);
     }
   }
 
-  function initScrollTransitions() {
-    scrollTransitionTargets = [];
-    document.querySelectorAll("main > section").forEach(function (section, index) {
-      var mode = index % 2 === 0 ? "back" : "drop";
-      section.classList.add("scroll-depth-layer", mode === "back" ? "scroll-depth-back" : "scroll-depth-drop");
-      scrollTransitionTargets.push({ section: section, mode: mode });
-    });
-
-    if (!scrollTransitionBound) {
-      window.addEventListener("scroll", scheduleScrollTransitions, { passive: true });
-      window.addEventListener("resize", scheduleScrollTransitions, { passive: true });
-      scrollTransitionBound = true;
+  function resetScrollTransitionMode() {
+    if (scrollSectionObserver) {
+      scrollSectionObserver.disconnect();
+      scrollSectionObserver = null;
     }
-
-    updateScrollTransitions();
-  }
-
-  function clearScrollTransitions() {
+    if (scrollTransitionBound) {
+      window.removeEventListener("scroll", scheduleScrollTransitions);
+      scrollTransitionBound = false;
+    }
     if (scrollTransitionFrame) {
       window.cancelAnimationFrame(scrollTransitionFrame);
       scrollTransitionFrame = 0;
     }
     scrollTransitionTargets.forEach(function (item) {
       var section = item.section;
-      section.classList.remove("scroll-depth-layer", "scroll-depth-back", "scroll-depth-drop", "scroll-depth-active");
-      [
-        "--section-flow-y", "--section-flow-z", "--section-flow-rotate",
-        "--section-flow-scale", "--section-flow-opacity", "--section-flow-radius",
-        "--section-flow-shadow"
-      ].forEach(function (property) {
-        section.style.removeProperty(property);
-      });
+      section.classList.remove(
+        "scroll-depth-layer", "scroll-depth-back", "scroll-depth-drop",
+        "scroll-depth-active", "scroll-depth-visible"
+      );
+      section.style.removeProperty("--section-flow-transform");
+      section.style.removeProperty("--section-flow-opacity");
       section.style.removeProperty("z-index");
+      item.lastTransform = null;
+      item.lastOpacity = null;
     });
+    frontScrollSection = null;
+    scrollTransitionMode = null;
+  }
+
+  function configureScrollTransitions() {
+    var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    var nextMode = window.innerWidth <= 820 || coarse ? "mobile" : "desktop";
+
+    if (scrollTransitionMode === nextMode) {
+      scheduleScrollTransitions();
+      return;
+    }
+
+    resetScrollTransitionMode();
+    scrollTransitionMode = nextMode;
+
+    scrollTransitionTargets.forEach(function (item, index) {
+      item.index = index;
+      item.mode = index % 2 === 0 ? "back" : "drop";
+      item.section.classList.add(
+        "scroll-depth-layer",
+        item.mode === "back" ? "scroll-depth-back" : "scroll-depth-drop"
+      );
+      if (nextMode === "desktop") item.section.style.zIndex = String(index + 1);
+    });
+
+    scrollSectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var item = scrollTransitionTargets.find(function (candidate) {
+          return candidate.section === entry.target;
+        });
+        if (nextMode === "mobile") {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("scroll-depth-visible");
+            scrollSectionObserver.unobserve(entry.target);
+          }
+          return;
+        }
+
+        entry.target.classList.toggle("scroll-depth-active", entry.isIntersecting);
+        if (!entry.isIntersecting && entry.target === frontScrollSection) {
+          entry.target.style.zIndex = String(item ? item.index + 1 : 1);
+          frontScrollSection = null;
+        }
+        if (entry.isIntersecting) scheduleScrollTransitions();
+      });
+    }, nextMode === "mobile"
+      ? { threshold: 0.04, rootMargin: "0px 0px -8% 0px" }
+      : { threshold: 0, rootMargin: "110% 0px" });
+
+    scrollTransitionTargets.forEach(function (item) {
+      scrollSectionObserver.observe(item.section);
+    });
+
+    if (nextMode === "desktop") {
+      window.addEventListener("scroll", scheduleScrollTransitions, { passive: true });
+      scrollTransitionBound = true;
+      scheduleScrollTransitions();
+    }
+  }
+
+  function handleScrollTransitionResize() {
+    configureScrollTransitions();
+    if (scrollTransitionMode === "desktop" && !parallaxBound) initParallax();
+  }
+
+  function initScrollTransitions() {
+    if (!scrollTransitionTargets.length) {
+      document.querySelectorAll("main > section").forEach(function (section, index) {
+        scrollTransitionTargets.push({
+          section: section,
+          index: index,
+          mode: index % 2 === 0 ? "back" : "drop",
+          lastTransform: null,
+          lastOpacity: null
+        });
+      });
+    }
+
+    if (!scrollResizeBound) {
+      window.addEventListener("resize", handleScrollTransitionResize, { passive: true });
+      scrollResizeBound = true;
+    }
+    configureScrollTransitions();
+  }
+
+  function clearScrollTransitions() {
+    resetScrollTransitionMode();
+    if (scrollResizeBound) {
+      window.removeEventListener("resize", handleScrollTransitionResize);
+      scrollResizeBound = false;
+    }
     scrollTransitionTargets = [];
+  }
+
+  function initAmbientMotion() {
+    if (!("IntersectionObserver" in window)) return;
+    if (ambientObserver) ambientObserver.disconnect();
+    ambientTargets = [];
+    var targets = new Set();
+    [
+      ".hero-art", ".program-art", ".about-card", ".principle-card",
+      ".care-card", ".closing-deco"
+    ].forEach(function (selector) {
+      document.querySelectorAll(selector).forEach(function (element) { targets.add(element); });
+    });
+    ambientTargets = Array.from(targets);
+
+    ambientObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        entry.target.classList.toggle("motion-in-view", entry.isIntersecting);
+      });
+    }, { threshold: 0.01, rootMargin: "100px 0px" });
+
+    ambientTargets.forEach(function (element) { ambientObserver.observe(element); });
+
+    if (!visibilityHandlerBound) {
+      document.addEventListener("visibilitychange", function () {
+        root.classList.toggle("motion-paused", document.hidden);
+      });
+      visibilityHandlerBound = true;
+    }
+    root.classList.toggle("motion-paused", document.hidden);
+  }
+
+  function clearAmbientMotion() {
+    if (ambientObserver) {
+      ambientObserver.disconnect();
+      ambientObserver = null;
+    }
+    ambientTargets.forEach(function (element) { element.classList.remove("motion-in-view"); });
+    ambientTargets = [];
+    root.classList.remove("motion-paused");
   }
 
   function applyRandomTitleTransitions() {
@@ -320,6 +467,7 @@
       root.classList.add("motion-ready");
       initialized = true;
       initScrollTransitions();
+      initAmbientMotion();
       if (observer) observer.disconnect();
       observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -353,6 +501,7 @@
     if (event.matches) {
       if (observer) observer.disconnect();
       clearScrollTransitions();
+      clearAmbientMotion();
       root.classList.remove("motion-ready", "motion-entered");
     } else {
       initialize();

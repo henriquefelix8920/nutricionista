@@ -129,3 +129,15 @@ Escala, opacidade, raio de borda e sombra também variam com a posição na view
 ## Hero — maçã fotográfica
 
 A composição abstrata anterior foi substituída por uma imagem original de maçã vermelha com folha verde, recortada em transparência e otimizada em WebP. A maçã flutua e inclina levemente em loop lento, enquanto os anéis decorativos continuam orbitando ao fundo.
+
+
+## Refinamento de performance e fundo dourado da hero — 16 de novembro de 2026
+
+- O fundo orgânico atrás da maçã usa agora dourado quente #D8AE36, reservado a essa superfície decorativa; a paleta principal de identidade continua sendo ameixa, rosa e lima.
+- Desktop com mouse mantém a transição contínua 3D entre seções: alternância entre aproximação em profundidade e descida do topo. O loop considera somente as seções próximas, ativadas por IntersectionObserver.
+- A cada frame, a atualização muda apenas transform e opacity. Sombra, raio de borda e z-index deixaram de ser recalculados continuamente; a ordem de empilhamento só muda quando a seção em foco muda.
+- Celular/tablet touch usa as mesmas duas linguagens de movimento como transições de entrada acionadas por IntersectionObserver. Não há listener de scroll, requestAnimationFrame ou transformação contínua de painéis nesse caminho.
+- will-change foi removido dos elementos escondidos de reveal, evitando reservar camadas antecipadamente para dezenas de cards/títulos.
+- Elementos ambientais só animam enquanto próximos da viewport. No touch, órbitas, grafismos secundários, símbolos e ícones animados ficam estáticos; a maçã mantém uma flutuação sutil.
+- O header sticky deixa de usar backdrop-filter blur em touch. O blur dos títulos também é removido no mobile.
+- Loops CSS são pausados quando a aba/documento fica oculto; prefers-reduced-motion limpa observers e mantém todos os conteúdos visíveis.

@@ -178,3 +178,78 @@ Após o novo deployment, a confirmação possível nesta sessão é a entrega HT
 - Imagem WebP validada como RGBA/transparente antes da conversão, com 480 × 439 px após otimização.
 - Conteúdo, links, navegação e textos existentes não foram alterados.
 - A confirmação visual em navegador real continua dependente de ambiente com acesso externo habilitado.
+
+
+# Auditoria de desempenho, acessibilidade e integridade — 16 de novembro de 2026
+
+## Escopo e método
+
+Revisão estática dos arquivos de produção no GitHub, árvore de assets, JavaScript/CSS, estrutura HTML, links internos, imagens, metadados e tokens cromáticos. Após a correção, a publicação no Vercel e as respostas HTTP dos recursos serão verificadas. Não há acesso a um browser externo funcional nesta sessão; portanto, Lighthouse, FPS, Core Web Vitals de campo, trace de renderização e testes de rolagem em aparelhos reais não são declarados como executados.
+
+## Diagnóstico de performance encontrado
+
+### Prioridade alta — scroll em dispositivos touch
+
+A implementação anterior executava um listener de rolagem com requestAnimationFrame também em celulares. A cada quadro ela consultava todas as 10 seções e atualizava até sete propriedades por seção: translateY/Z, rotateX, scale, opacity, border-radius, box-shadow e z-index. Além de transformar grandes superfícies, sombra e arredondamento variáveis exigem repintura; a estratégia podia causar stutter em GPUs móveis.
+
+**Correção:** em desktop com mouse o scrub 3D continua, mas só para seções próximas ativadas por IntersectionObserver e com atualização limitada a transform/opacity. z-index só muda quando a seção em foco muda. Em touch/mobile não existe mais loop de scroll: a alternância fundo/profundidade e descida é aplicada como entrada de seção via IntersectionObserver e transições CSS de transform/opacity.
+
+### Prioridade média — promoção antecipada de camadas
+
+Os seletores base de motion-enter e motion-reveal reservavam will-change para todos os elementos ainda escondidos. Muitos cards/títulos aguardando entrada poderiam consumir memória de textura/camadas em aparelhos com GPU limitada.
+
+**Correção:** removido will-change global dos elementos em espera. will-change de seção só fica ativo nos painéis próximos no desktop; no mobile não é forçada promoção permanente.
+
+### Prioridade média — filtros e loops fora da viewport
+
+O header sticky aplicava backdrop blur durante a rolagem. Grafismos (órbitas, símbolos, estrelas, ramos e pin) continuavam em loops depois de saírem da tela e alguns permaneciam ativos em aparelhos touch. Títulos usavam blur no começo da transição.
+
+**Correção:** header sem backdrop-filter em touch, blur de títulos desativado no mobile, animações secundárias pausadas em touch; observer dedicado limita loops ambientais aos elementos próximos da viewport. Os loops também pausam quando a página fica oculta. A maçã permanece com flutuação lenta e de baixa amplitude.
+
+## Inventário de payload estático
+
+Tamanhos de arquivo do GitHub antes da nova publicação (bytes em disco, não transfer size comprimido):
+
+| Recurso | Tamanho |
+|---|---:|
+| index.html | 26.281 bytes (25,7 KiB) |
+| styles.css | 45.907 bytes (44,8 KiB) |
+| script.js | 14.842 bytes (14,5 KiB) |
+| assets/apple-photo.webp | 18.596 bytes (18,2 KiB) |
+| assets/brand-sprig.svg | 568 bytes (0,6 KiB) |
+| assets/favicon.svg | 375 bytes (0,4 KiB) |
+| **Total estático medido** | **106.569 bytes (104,1 KiB)** |
+
+O total não inclui fontes externas servidas pelo Google Fonts, cabeçalhos HTTP, compressão Brotli/gzip ou cache. A página não usa framework, biblioteca de animação, vídeo, WebGL ou biblioteca JavaScript de terceiros. Os únicos recursos externos visíveis no HTML são a folha de estilos de Google Fonts e os arquivos de fonte associados; preconnect já existe e a família usa display=swap.
+
+## Integridade estrutural e SEO — verificação estática
+
+- Idioma pt-BR, title e meta description presentes.
+- Um H1, oito H2, nove H3; 10 seções principais.
+- 19 IDs, sem duplicatas; 10 links internos #..., todos com destino existente.
+- Quatro tags de imagem; imagens decorativas têm alt vazio. A maçã é exposta por um contêiner com role=img e rótulo acessível.
+- JavaScript externo com defer; nenhum script inline detectado.
+- Sem formulários de envio que aparentem funcionar sem integração.
+- O arquivo estático de HTML não requer etapa de build nem instalação de dependências.
+
+## Acessibilidade — verificações estáticas selecionadas
+
+Contrastes calculados a partir das cores declaradas: ameixa sobre papel 13,96:1; branco sobre ameixa 14,76:1; lima sobre ameixa 11,52:1; texto escuro sobre rosa 4,88:1; ameixa sobre dourado 7,05:1. A combinação rosa sobre ameixa resulta em 3,85:1 e não deve ser usada para texto comum; reserve-a a elementos grandes/decorativos ou escolha outra cor de texto. Foco visível, menu móvel com atributos ARIA e FAQ nativo details/summary estão presentes. A navegação por teclado e leitores de tela não foi testada em browser nesta sessão.
+
+## Resultado e limitações dos testes
+
+| Teste | Resultado |
+|---|---|
+| Parse JavaScript V8 | Aprovado |
+| Balanceamento de chaves CSS | Aprovado |
+| IDs únicos / links internos | Aprovado |
+| Inventário e tamanhos de assets | Aprovado |
+| Build | Não aplicável: HTML/CSS/JS estáticos, sem etapa de build |
+| Typecheck / lint / testes automatizados | Não aplicável / não configurados |
+| Lighthouse mobile/desktop | Não executado — browser externo indisponível |
+| FPS, DevTools Performance trace, scroll em aparelhos físicos | Não executado |
+| Core Web Vitals de campo (CrUX/Analytics) | Não disponível nesta sessão |
+| Inspeção visual em 360, 390, 768, 1024 e 1440 px | Não executada — browser externo indisponível |
+| Status do deploy e HTTP 200 dos arquivos | A validar após publicação |
+
+**Conclusão:** a causa de código mais provável para a rolagem pesada em mobile foi removida estruturalmente: nenhum cálculo contínuo de scroll nem transformação 3D de painel é executado no caminho touch. A versão mantém transições visíveis por entradas CSS/IntersectionObserver no celular e o scrub 3D completo em desktop. A suavidade real precisa ser confirmada em aparelhos físicos ou em browser com profiling; não atribuí pontuação de Lighthouse nem FPS sem medição.
