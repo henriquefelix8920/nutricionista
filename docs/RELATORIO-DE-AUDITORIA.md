@@ -290,3 +290,11 @@ O aumento de cerca de 6,6 KiB no total medido em relação à versão anterior v
 ### Limite da conclusão de performance
 
 A mudança elimina o loop de JavaScript de rolagem no celular e reduz repinturas/camadas antecipadas no código; isso é uma correção estrutural para o gargalo identificado. Não há medição de FPS, Lighthouse, Core Web Vitals, memória de GPU nem teste em aparelhos físicos nesta sessão. Portanto, a fluidez melhorada é esperada pela redução do trabalho por frame, mas ainda precisa de validação real em celular. O navegador automatizado externo segue bloqueado no ambiente.
+
+
+## Atualização — atlas vetorial único de frutas
+- Criado `assets/fruit-atlas.svg`: SVG transparente de 400×400 px, grade 4×4 com 16 células iguais.
+- Os ícones substituídos no HTML são recortes CSS que reutilizam a mesma imagem em 10 elementos; não foram criados arquivos individuais por fruta.
+- Os movimentos usam CSS `transform` (giro/balanço/flutuação), habilitados apenas enquanto os cards estão próximos/visíveis por `IntersectionObserver`. O observador de ambient motion também acompanha os cards de atendimento.
+- Em touch/mobile os movimentos são desacelerados; `prefers-reduced-motion` continua respeitado. Não foram adicionados listeners de scroll ou cálculos por quadro para animar as frutas.
+- Limitação de validação: atualização conferida por inspeção estática de HTML/CSS/JS e pelo pipeline de publicação; não foi possível executar inspeção visual ou Lighthouse em navegador/dispositivo real neste ambiente.

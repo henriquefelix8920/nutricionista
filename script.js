@@ -324,7 +324,7 @@
     var targets = new Set();
     [
       ".hero-art", ".program-art", ".about-card", ".principle-card",
-      ".care-card", ".closing-deco"
+      ".care-card", ".service-card", ".closing-deco"
     ].forEach(function (selector) {
       document.querySelectorAll(selector).forEach(function (element) { targets.add(element); });
     });

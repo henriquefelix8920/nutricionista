@@ -141,3 +141,11 @@ A composição abstrata anterior foi substituída por uma imagem original de ma�
 - Elementos ambientais só animam enquanto próximos da viewport. No touch, órbitas, grafismos secundários, símbolos e ícones animados ficam estáticos; a maçã mantém uma flutuação sutil.
 - O header sticky deixa de usar backdrop-filter blur em touch. O blur dos títulos também é removido no mobile.
 - Loops CSS são pausados quando a aba/documento fica oculto; prefers-reduced-motion limpa observers e mantém todos os conteúdos visíveis.
+
+
+## Atlas vetorial único de frutas
+- Os ícones das seções usam um único arquivo transparente: `assets/fruit-atlas.svg`, uma grade regular 4×4 com 16 frutas.
+- Cada elemento seleciona uma célula com `background-position` e `background-size:400% 400%`; não há 16 arquivos separados.
+- Aplicações: três princípios, quatro especialidades (incluindo conforto e bem-estar intestinal), o programa com selo “3 meses” e as duas modalidades de atendimento.
+- Cada fruta recebe animação CSS independente, variando entre giro lento, balanço e flutuação. Os movimentos usam somente `transform` e só ficam ativos quando o card está próximo/visível.
+- O comportamento respeita `prefers-reduced-motion`; em telas touch os ciclos ficam mais lentos. Não há loop JavaScript por quadro para animar frutas.
